@@ -1,0 +1,208 @@
+const THREE = require('three');
+
+const CameraHandler = require('./camera.src.js');
+const ObjectMaker = require('./objects.src.js');
+
+const raycaster = new THREE.Raycaster();
+
+const setRed = (lastclicked,col) => {
+	for (let i=0; i < lastclicked.length; i++)
+		lastclicked[i].material.color.r = col;
+};
+
+function Manager(width, height, parent) {
+	const renderer = new THREE.WebGLRenderer();
+	const rendermap = new Map();
+	const scene = new THREE.Scene();
+	const camhandler = new CameraHandler(width, height);
+
+	var rendering = false;
+
+	// size is static, decided by view
+	renderer.setSize(width, height);
+	parent.appendChild(renderer.domElement);
+	
+	// maybe move to CameraHandler?
+	
+	camhandler.getCamera().position.set( 0, 2, 6 );
+//	camhandler.getCamera().lookAt( -2, 0, 4 ); // 45 degrees - cam_r should be 3.4641
+	camhandler.getCamera().lookAt( -2, 0, 5 ); // half cube - cam_r should be 3
+//	camhandler.getCamera().lookAt( -2, 2, 5 ); // test along z
+//	camhandler.getCamera().lookAt( -2, 0, 8 ); // other way
+//	camhandler.getCamera().lookAt( -2, 0, -4 ); // far away
+//	camhandler.getCamera().lookAt( 2, 0, 5 ); // bad theta
+
+//	camhandler.getCamera().position.set( 0, -2, 6 );
+//	camhandler.getCamera().lookAt( -2, 0, 5 ); // look up
+	
+	var cube = ObjectMaker.makeRotatingCube();
+	scene.add( cube );// add without args places it on (0,0,0)
+	scene.remove( cube );
+/*
+	for (var i=0; i < 8; i++)
+		for (var j=0; j < 8; j++)
+			scene.add( ObjectMaker.makeTile(i*4 - 4*4+2, 0, j*4 - 4*4+2) );
+//*/
+	// TODO add these to objects
+	
+//	scene.add( ObjectMaker.makeLine() );
+	
+	var grid = null;
+
+	const render = () => {
+		renderer.render( scene, camhandler.getCamera() );
+/*		camhandler.render(camera => {
+			renderer.render( scene, camera );
+		});
+*/	};
+
+	var lastclicked = [];
+	var wallbuild = false;
+	var start = null;
+
+	this.clickLeftDown = (x,y) => {
+		// TODO determine orientation here already
+		if (grid !== null)
+			start = camhandler.getPlaneClick(x,y,ObjectMaker.getLevel());
+		else {
+			setRed(lastclicked,0);
+			lastclicked = [];
+			start = null;
+			render();
+
+			const vector = new THREE.Vector2(
+//				(x - offsetleft) / width * 2 - 1,
+//				- (y - offsettop) / height * 2 + 1
+				x / width * 2 - 1,
+				- y / height * 2 + 1
+			);
+			raycaster.setFromCamera( vector, camhandler.getCamera() );
+			const intersects = raycaster.intersectObjects( scene.children );
+			
+			// change color of last clicked object TODO do colors better
+			
+			if (intersects.length !== 0)
+				start = intersects[0].object.position;
+		}
+	};
+	this.clickLeftUp = (x,y) => {
+		if (grid !== null) {// place an object
+			// TODO different end y level depending on build
+			const end = camhandler.getPlaneClick(x,y,ObjectMaker.getLevel());
+			if (wallbuild) {
+				const newtile = ObjectMaker.makeWall(end.x, end.z);
+				camhandler.getXclick(x,y,start.x);
+//*
+				if (newtile) {
+//					camhandler.getXclick(x,y,newtile.position.x);
+					scene.add( newtile );
+				}
+//*/
+			} else {
+				const newtiles = ObjectMaker.makeTile(end.x, end.z, start);
+				for (let i=0; i < newtiles.length; i++)
+					scene.add( newtiles[i] );
+			}
+		} else {// click an object
+			if (start === null)
+				return;
+
+			const end = camhandler.getPlaneClick(x,y,start.y);
+
+			lastclicked = ObjectMaker.findTiles(start,end);
+
+			for (let i=0; i < lastclicked.length; i++) {
+				lastclicked[i].material.color.r = 1;
+//				lastclicked[i].onClick();
+			}
+		}
+		render();
+	};
+
+	this.clickRightDown = (x,y) => {
+		camhandler.rotationStart(x,y);
+	};
+	this.clickRightUp = () => {
+		camhandler.rotationStop();
+	};
+
+	this.mouseMove = (x,y) => {
+		if (camhandler.rotationMove(x,y))
+			render();
+	};	
+
+	this.keyDown = key => {
+		if (camhandler.hasMovement(key)) { // does the key control movement?
+			if (rendermap.has(key)) // movement already being rendered
+				return;
+			rendermap.set(key, camhandler.getMovement(key));
+
+			// TODO move render loop start to its own function?
+			if (rendering)
+				return;
+			rendering = true;
+			(loop = () => {
+				if (!rendering)
+					return;
+				rendermap.forEach( value => { value(); });
+				render();
+				setTimeout(loop, 10)
+			})();
+		} else if (keyfuncs.has(key)) { // keys unrelated to camera
+			keyfuncs.get(key)();
+		}
+	};
+	this.keyUp = key => {
+		rendermap.delete(key);
+		if (rendermap.size === 0)
+			rendering = false;
+	};
+
+	const keyfuncs = new Map();
+	
+	keyfuncs.set('V', () => {
+		if (grid === null) {
+			setRed(lastclicked,0);
+			lastclicked = [];
+			grid = ObjectMaker.makeGrid();
+			scene.add( grid );
+		} else {
+			scene.remove(grid);
+			grid = null;
+		}
+		render();
+	});
+	keyfuncs.set('+', () => {
+		if (grid !== null) {
+			ObjectMaker.incLevel(1);
+			grid.position.set( 0, ObjectMaker.getLevel(), 0 );
+			render();
+		}
+	});
+	keyfuncs.set('-', () => {
+		if (grid !== null) {
+			ObjectMaker.incLevel(-1);
+			grid.position.set( 0, ObjectMaker.getLevel(), 0 );
+			render();
+		}
+	});
+	keyfuncs.set('DELETE', () => {
+		if (lastclicked === [])
+			return;
+		for (let i=0; i < lastclicked.length; i++) {
+			scene.remove( lastclicked[i] );
+			ObjectMaker.removeTile( lastclicked[i].position );
+		}
+		lastclicked = [];
+		render();
+	});
+	keyfuncs.set('B', () => {
+		if (grid !== null)
+			wallbuild = !wallbuild;
+	});
+	
+	render();
+
+}
+
+module.exports = Manager;

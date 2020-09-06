@@ -1,2 +1,5 @@
 # ignore everything in the folder created by npm
 node_modules
+
+# ignore the build folder in public/
+public/build
