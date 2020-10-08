@@ -25,16 +25,9 @@ function Manager(width, height, parent) {
 	// maybe move to CameraHandler?
 	
 	camhandler.getCamera().position.set( 0, 2, 6 );
-//	camhandler.getCamera().lookAt( -2, 0, 4 ); // 45 degrees - cam_r should be 3.4641
-	camhandler.getCamera().lookAt( -2, 0, 5 ); // half cube - cam_r should be 3
-//	camhandler.getCamera().lookAt( -2, 2, 5 ); // test along z
-//	camhandler.getCamera().lookAt( -2, 0, 8 ); // other way
-//	camhandler.getCamera().lookAt( -2, 0, -4 ); // far away
-//	camhandler.getCamera().lookAt( 2, 0, 5 ); // bad theta
+//	camhandler.getCamera().lookAt( -2, 0, 4 );
+	camhandler.getCamera().lookAt( 2, 0, 4 );
 
-//	camhandler.getCamera().position.set( 0, -2, 6 );
-//	camhandler.getCamera().lookAt( -2, 0, 5 ); // look up
-	
 	var cube = ObjectMaker.makeRotatingCube();
 	scene.add( cube );// add without args places it on (0,0,0)
 	scene.remove( cube );

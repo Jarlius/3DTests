@@ -70,7 +70,7 @@ const pythLeg = (c,b) => {
 };
 const toDeg = rad => {
 	return rad*180/Math.PI;
-}
+};
 
 function CameraHandler(width, height) {
 	const camera = new THREE.PerspectiveCamera(
@@ -147,86 +147,83 @@ function CameraHandler(width, height) {
 		const angles = getAngles(camera);
 //		const x_diff = camera.position.x - xlevel;
 		// TODO stop replacing once it works properly
-		const xrep = -2;
+		const xrep = 2;
 		const x_diff = camera.position.x - xrep;
 //		console.log(x_diff);
 
 		// check if the theta angle is bad
-		const plane_click = this.getPlaneClick(x,y,0);
+/*		const plane_click = this.getPlaneClick(x,y,camera.position.y-1);// TODO här blir det fel
 		if (
 			x_diff === 0 ||
 			(x_diff > 0 && plane_click.x > camera.position.x) ||
 			(x_diff < 0 && plane_click.x < camera.position.x)
 		)
 			return;// signal bad angle? TODO
-		
+*/		
 		const camang = getCamAngles(x,y);
-		let pre_theta = angles.theta - Math.PI/2;
-		if (x_diff > 0)
-			pre_theta -= Math.PI;
-		pre_theta = pre_theta % (Math.PI*2);
-		if (pre_theta < -Math.PI)
-			pre_theta += Math.PI*2;
-		const theta = pre_theta;
+
+		const theta = Math.abs(angles.theta) - Math.PI/2;
 		const phi = angles.phi - Math.PI/2;
 		// check if the cam angle is bad TODO maybe allow this in the future
-		if (Math.abs(theta) > Math.PI/2)
-			return;
+//		if (Math.abs(theta) > Math.PI/2)
+//			return;
 		console.log('theta',toDeg(theta),toDeg(camang.theta));
-//		console.log(toDeg(phi));
+//		console.log('phi',toDeg(phi));
 
 		const diff_r = x_diff / Math.cos( phi );
 		const cam_r = diff_r / Math.cos( theta );
 		const plane_r = pythLeg(cam_r,x_diff);
 		console.log('camr',diff_r,cam_r,plane_r);
 
-		// TODO det kanske är bäst att sätta all sin till abs, och göra +/- efteråt
-
 		const cam_y = Math.sin( phi ) * cam_r;//+ camera.position.y;
-		const cam_z = pythLeg( plane_r, cam_y );// TODO fixa +/-
+		const cam_z = pythLeg( plane_r, cam_y );
 //		console.log('cams',cam_y,cam_z);
 
 		// x_diff is the hypothenuse in a horizontal triangle created by theta
 		const r_leg = Math.cos( theta ) * Math.abs( x_diff );
 		const y_diff = Math.abs( Math.tan( phi + camang.phi ) ) * r_leg;
 		const y_r = pythHyp(x_diff,y_diff);
+//		console.log('y_diff',y_diff);
 //		console.log('y_r',y_r);
 
 		// distance from camera to x_plane along the center y-axis
 		const z_r = x_diff / Math.cos( theta );
 		const phi_r = z_r / Math.cos( phi + camang.phi );
 		const phi_y = pythLeg( phi_r, z_r );
-		console.log('phi,ydiff',phi_y,y_diff);// y_diff negativt. påverkar det nåt?
+//		console.log('phi,ydiff',phi_y,y_diff);// y_diff negativt. påverkar det nåt?
 		
 		// theta_r is the hypothenuse of a triangle on the x plane
 		const theta_r = pythHyp(cam_z,phi_y - y_diff);
-		console.log('thetar',theta_r);
+//		console.log('thetar',theta_r);
 		// with all sides known, angles can be found on the theta_r-cam triangle
+		const max_theta = Math.acos(
+			(square(y_r) + square(phi_r) - square(theta_r))
+			/ (2*y_r*phi_r)
+		);
+		console.log('max',toDeg(max_theta));
+		if (Math.abs(camang.theta) > Math.abs(max_theta))
+			return;
 		const gamma = Math.acos(
 			(square(theta_r) + square(phi_r) - square(y_r))
 			/ (2*theta_r*phi_r)
 		);
+//		console.log('gamma',toDeg(gamma));
 		// the angle between the z-axis and theta_r finds the camang.theta_r length
 		const psi = Math.acos( cam_z / theta_r );
-		console.log('psi',toDeg(psi));
+//		console.log('psi',toDeg(psi));
 		
-		// allt hittills är rätt. förutom +/- TODO
+		// omega + (180-gamma) + camang.theta = 180 => omega = gamma - camang.theta
+		const omega = gamma + (Math.sign( theta ) * camang.theta);
+		const click_r = (phi_r / Math.sin( omega )) * Math.sin( camang.theta );
+		const click_y = Math.sin( psi ) * click_r;
+		const click_z = Math.cos( psi ) * click_r;
+//		console.log('click',click_y,click_z);
 		
-//		console.log(toDeg(gamma),toDeg(theta),toDeg(camang.theta));
-		
-		const click_r = (phi_r / Math.sin( gamma - (-camang.theta) )) * Math.sin( camang.theta );
-		const whole_r = Math.sign( theta ) * theta_r + click_r;
-		console.log('test',Math.sign( theta ),theta_r);
-//		console.log(Math.sign( theta ) * theta_r,click_r);
-
-		// TODO ah! det är för att whole_r går från 2 till -4
-		// vilket egentligen är 6 men blir till 4		
-//		console.log( Math.cos(psi)*theta_r,Math.cos(psi)*click_r);
-
 //*
 		console.log(
-			Math.cos( psi ) * whole_r + camera.position.z,
-			Math.sign( phi + camang.phi ) * ( Math.sin( psi ) * whole_r - y_diff ) + camera.position.y
+			'return:',
+			camera.position.y - Math.sign( phi + camang.phi ) * (phi_y - (Math.sign( theta ) * click_y)),
+			camera.position.z - (Math.sign( theta ) * cam_z) + click_z
 		);
 //*/
 	};
