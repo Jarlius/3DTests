@@ -72,6 +72,8 @@ const toDeg = rad => {
 	return rad*180/Math.PI;
 };
 
+// TODO kanske göra en egen fil för matematiska beräkningar
+
 function CameraHandler(width, height) {
 	const camera = new THREE.PerspectiveCamera(
 		FOV_DEGREES,						// Field of view, FOV
@@ -161,7 +163,17 @@ function CameraHandler(width, height) {
 			return;// signal bad angle? TODO
 */		
 		const camang = getCamAngles(x,y);
-
+		const stuff = this.stuff(x_diff,angles,camang);
+		
+		console.log(
+			camera.position.y - stuff.y,
+			camera.position.z - stuff.z
+		);
+	};
+	
+	// return värden: ny_theta, 
+	
+	this.stuff = (x_diff,angles,camang) => {
 		const theta = Math.abs(angles.theta) - Math.PI/2;
 		const phi = angles.phi - Math.PI/2;
 		// check if the cam angle is bad TODO maybe allow this in the future
@@ -170,13 +182,13 @@ function CameraHandler(width, height) {
 		console.log('theta',toDeg(theta),toDeg(camang.theta));
 //		console.log('phi',toDeg(phi));
 
-		const diff_r = x_diff / Math.cos( phi );
-		const cam_r = diff_r / Math.cos( theta );
-		const plane_r = pythLeg(cam_r,x_diff);
-		console.log('camr',diff_r,cam_r,plane_r);
+		const diff_r = x_diff / Math.cos( phi );// bara här
+		const cam_r = diff_r / Math.cos( theta );// här och nästa
+		const plane_r = pythLeg(cam_r,x_diff);// här och nästa
+//		console.log('camr',diff_r,cam_r,plane_r);
 
-		const cam_y = Math.sin( phi ) * cam_r;//+ camera.position.y;
-		const cam_z = pythLeg( plane_r, cam_y );
+		const cam_y = Math.sin( phi ) * cam_r;// bara här
+		const cam_z = pythLeg( plane_r, cam_y );// flera ställen - returvärde?
 //		console.log('cams',cam_y,cam_z);
 
 		// x_diff is the hypothenuse in a horizontal triangle created by theta
@@ -198,14 +210,14 @@ function CameraHandler(width, height) {
 		// with all sides known, angles can be found on the theta_r-cam triangle
 		const max_theta = Math.acos(
 			(square(y_r) + square(phi_r) - square(theta_r))
-			/ (2*y_r*phi_r)
+			/ Math.abs(2*y_r*phi_r)
 		);
 		console.log('max',toDeg(max_theta));
-		if (Math.abs(camang.theta) > Math.abs(max_theta))
-			return;
+		if (camang.theta > Math.abs(max_theta))//TODO fixa dessa, lägga till angles.theta kanske
+			return {y:0,z:0};
 		const gamma = Math.acos(
 			(square(theta_r) + square(phi_r) - square(y_r))
-			/ (2*theta_r*phi_r)
+			/ Math.abs(2*theta_r*phi_r)
 		);
 //		console.log('gamma',toDeg(gamma));
 		// the angle between the z-axis and theta_r finds the camang.theta_r length
@@ -213,19 +225,17 @@ function CameraHandler(width, height) {
 //		console.log('psi',toDeg(psi));
 		
 		// omega + (180-gamma) + camang.theta = 180 => omega = gamma - camang.theta
-		const omega = gamma + (Math.sign( theta ) * camang.theta);
+		const omega = gamma - (Math.sign( theta ) * camang.theta);
 		const click_r = (phi_r / Math.sin( omega )) * Math.sin( camang.theta );
 		const click_y = Math.sin( psi ) * click_r;
 		const click_z = Math.cos( psi ) * click_r;
 //		console.log('click',click_y,click_z);
 		
-//*
-		console.log(
-			'return:',
-			camera.position.y - Math.sign( phi + camang.phi ) * (phi_y - (Math.sign( theta ) * click_y)),
-			camera.position.z - (Math.sign( theta ) * cam_z) + click_z
-		);
-//*/
+		return {
+			y: Math.sign( phi + camang.phi ) * (phi_y - (Math.sign( theta ) * click_y)),
+			z: (Math.sign( theta ) * cam_z) - click_z,
+			max: max_theta
+		};
 	};
 
 	this.hasMovement = (key) => {
