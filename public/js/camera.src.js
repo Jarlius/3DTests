@@ -147,48 +147,49 @@ function CameraHandler(width, height) {
 	};
 	this.getXclick = (x,y,xlevel) => {
 		const angles = getAngles(camera);
+		const camang = getCamAngles(x,y);
 //		const x_diff = camera.position.x - xlevel;
 		// TODO stop replacing once it works properly
 		const xrep = 2;
 		const x_diff = camera.position.x - xrep;
 //		console.log(x_diff);
 
-		// check if the theta angle is bad
-/*		const plane_click = this.getPlaneClick(x,y,camera.position.y-1);// TODO här blir det fel
-		if (
-			x_diff === 0 ||
-			(x_diff > 0 && plane_click.x > camera.position.x) ||
-			(x_diff < 0 && plane_click.x < camera.position.x)
-		)
-			return;// signal bad angle? TODO
-*/		
-		const camang = getCamAngles(x,y);
-		const stuff = this.stuff(x_diff,angles,camang);
-		
-		console.log(
-			camera.position.y - stuff.y,
-			camera.position.z - stuff.z
-		);
-	};
-	
-	// return värden: ny_theta, 
-	
-	this.stuff = (x_diff,angles,camang) => {
 		const theta = Math.abs(angles.theta) - Math.PI/2;
 		const phi = angles.phi - Math.PI/2;
-		// check if the cam angle is bad TODO maybe allow this in the future
-//		if (Math.abs(theta) > Math.PI/2)
-//			return;
-		console.log('theta',toDeg(theta),toDeg(camang.theta));
-//		console.log('phi',toDeg(phi));
 
-		const diff_r = x_diff / Math.cos( phi );// bara här
-		const cam_r = diff_r / Math.cos( theta );// här och nästa
-		const plane_r = pythLeg(cam_r,x_diff);// här och nästa
+		// check if the click theta angle is bad TODO use this method for other things?
+		const a = 1;
+		const b = Math.cos( phi + camang.phi );
+		const max_theta = Math.atan((b/a)*Math.tan(Math.PI/2 - theta));
+//		console.log('max',toDeg(max_theta));
+
+		// if turned away from the surface, the angle must be greater than max
+		// if turned onto the surface, angle must be less than max
+		const towards = (Math.sign(x_diff) === Math.sign(angles.theta)) ===
+			(Math.sign(angles.theta)*camang.theta > max_theta);
+		// for one side it must be reverted
+		if ((Math.abs(angles.theta) < Math.PI/2) === towards)
+			return;
+		// signal bad angle? TODO
+
+		const result = this.verticalProjection(x_diff,theta,phi,camang);
+		
+//*
+		console.log(
+			camera.position.y - result.y,
+			camera.position.z - result.z
+		);
+//*/
+	};
+		
+	this.verticalProjection = (x_diff,theta,phi,camang) => {
+		const diff_r = x_diff / Math.cos( phi );
+		const cam_r = diff_r / Math.cos( theta );
+		const plane_r = pythLeg(cam_r,x_diff);
 //		console.log('camr',diff_r,cam_r,plane_r);
 
-		const cam_y = Math.sin( phi ) * cam_r;// bara här
-		const cam_z = pythLeg( plane_r, cam_y );// flera ställen - returvärde?
+		const cam_y = Math.sin( phi ) * cam_r;
+		const cam_z = pythLeg( plane_r, cam_y );
 //		console.log('cams',cam_y,cam_z);
 
 		// x_diff is the hypothenuse in a horizontal triangle created by theta
@@ -202,19 +203,12 @@ function CameraHandler(width, height) {
 		const z_r = x_diff / Math.cos( theta );
 		const phi_r = z_r / Math.cos( phi + camang.phi );
 		const phi_y = pythLeg( phi_r, z_r );
-//		console.log('phi,ydiff',phi_y,y_diff);// y_diff negativt. påverkar det nåt?
+//		console.log('phi,ydiff',phi_y,y_diff);
 		
 		// theta_r is the hypothenuse of a triangle on the x plane
 		const theta_r = pythHyp(cam_z,phi_y - y_diff);
 //		console.log('thetar',theta_r);
 		// with all sides known, angles can be found on the theta_r-cam triangle
-		const max_theta = Math.acos(
-			(square(y_r) + square(phi_r) - square(theta_r))
-			/ Math.abs(2*y_r*phi_r)
-		);
-		console.log('max',toDeg(max_theta));
-		if (camang.theta > Math.abs(max_theta))//TODO fixa dessa, lägga till angles.theta kanske
-			return {y:0,z:0};
 		const gamma = Math.acos(
 			(square(theta_r) + square(phi_r) - square(y_r))
 			/ Math.abs(2*theta_r*phi_r)
@@ -233,8 +227,7 @@ function CameraHandler(width, height) {
 		
 		return {
 			y: Math.sign( phi + camang.phi ) * (phi_y - (Math.sign( theta ) * click_y)),
-			z: (Math.sign( theta ) * cam_z) - click_z,
-			max: max_theta
+			z: (Math.sign( theta ) * cam_z) - click_z
 		};
 	};
 
