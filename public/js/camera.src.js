@@ -154,6 +154,19 @@ function CameraHandler(width, height) {
 		const x_diff = camera.position.x - xrep;
 //		console.log(x_diff);
 
+		const result = this.checkAngles(angles,camang,x_diff);
+//*
+		console.log(
+			camera.position.y - result.y,
+			camera.position.z - result.z
+		);
+//*/
+	};
+	
+	this.checkAngles = (angles,camang,x_diff) => {
+		console.log(toDeg(angles.theta),toDeg(angles.phi));
+		console.log(toDeg(camang.theta),toDeg(camang.phi));
+		
 		const theta = Math.abs(angles.theta) - Math.PI/2;
 		const phi = angles.phi - Math.PI/2;
 
@@ -172,14 +185,7 @@ function CameraHandler(width, height) {
 			return;
 		// signal bad angle? TODO
 
-		const result = this.verticalProjection(x_diff,theta,phi,camang);
-		
-//*
-		console.log(
-			camera.position.y - result.y,
-			camera.position.z - result.z
-		);
-//*/
+		return this.verticalProjection(x_diff,theta,phi,camang);
 	};
 		
 	this.verticalProjection = (x_diff,theta,phi,camang) => {
