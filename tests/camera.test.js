@@ -46,14 +46,35 @@ const getAngles = (cam,click) =>  {
 	};
 };
 
-// x argument and x_diff argument is 2 and -2, can be automated later
-const cam = cartesianToPolar(2,-2,-4);
-const click = cartesianToPolar(2,-2,-2);
-const test = getAngles(cam,click);
+const tol = 0.001;
 
-console.log('resulting click angle should be close to -14.9,12.8');
-console.log('theta',toDeg(test.theta));
-console.log('phi',toDeg(test.phi));
+const testSimple = (cam,click) => {
+	const camang = cartesianToPolar(cam.x,cam.y,cam.z);
+	const clickang = cartesianToPolar(click.x,click.y,click.z);
+	const angdiff = getAngles(camang,clickang);
+	const res = handler.checkAngles(camang,angdiff,-click.x);
+	if (Math.abs(click.y+res.y) < tol && Math.abs(click.z+res.z) < tol)
+		return true;
+	return false;
+};
 
-const res = handler.checkAngles(cam,{theta:test.theta,phi:test.phi},-2); // here is the -2 x_diff
-console.log(res);
+const v = [
+	['basic - angle should be close to -14.9,12.8',
+		[2,-2,-4],[2,-2,-2]],
+	['basic but different',
+		[2,-5,-7],[2,-3,-2]],
+	['first quadrant',
+		[2,3,2],[2,4,5]],
+	['accross good quadrants',
+		[2,-2,3],[2,-4,-1]],
+	['hard',
+		[-2,-2,4],[2,-2,2]]
+];
+for (let i=0; i < v.length; i++) {
+	const title = v[i][0];
+	const cam = v[i][1];
+	const click = v[i][2];
+	const test = testSimple({x:cam[0],y:cam[1],z:cam[2]},{x:click[0],y:click[1],z:click[2]})
+	console.log(title,test);
+}
+
