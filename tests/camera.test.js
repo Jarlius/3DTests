@@ -56,6 +56,10 @@ const testSimple = (cam,click) => {
 	const camang = cartesianToPolar(cam.x,cam.y,cam.z);
 	const clickang = cartesianToPolar(click.x,click.y,click.z);
 	const angdiff = getAngles(camang,clickang);
+
+	if (camang.theta > Math.PI)
+		camang.theta = camang.theta-Math.PI*2;
+
 	const res = handler.checkAngles(camang,angdiff,-click.x);
 	if (Math.abs(click.y+res.y) < tol && Math.abs(click.z+res.z) < tol)
 		return true;
