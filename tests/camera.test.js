@@ -41,7 +41,7 @@ const getAngles = (cam,click) =>  {
 	const theta = Math.acos( Math.sqrt( (far_leg*far_leg) + (near_leg*near_leg) ) );
 
 	let theta_sign = Math.sign( theta_diff );
-	if (Math.abs( theta_sign ) > Math.PI)
+	if (Math.abs( theta_diff ) > Math.PI)
 		theta_sign = -theta_sign;
 	
 	return {
