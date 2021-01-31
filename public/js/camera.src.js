@@ -181,9 +181,11 @@ function CameraHandler(width, height) {
 		const towards = (Math.sign(x_diff) === Math.sign(angles.theta)) ===
 			(Math.sign(angles.theta)*camang.theta > max_theta);
 		// for one side it must be reverted
-		if ((Math.abs(angles.theta) < Math.PI/2) === towards)
+		if ((Math.abs(angles.theta) < Math.PI/2) === towards) {
+			// signal bad angle? TODO
+			console.log('Bad angle!');
 			return;
-		// signal bad angle? TODO
+		}
 
 		return this.verticalProjection(x_diff,theta,phi,camang);
 	};
