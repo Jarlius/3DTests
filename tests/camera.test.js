@@ -31,17 +31,21 @@ const cartesianToPolar = (x,y,z) => {
 // get screen angles between camera center and click
 // TODO test more angles for +/- errors
 const getAngles = (cam,click) =>  {
-	const phi_c = click.phi-Math.PI/2;
-	const theta_d = click.theta-cam.theta;
+	const phi_click = click.phi-Math.PI/2;
+	const theta_diff = click.theta-cam.theta;
 
-	const phi = Math.atan(
-		Math.sin(phi_c) / // far leg
-		( Math.cos(theta_d) * Math.cos(phi_c) ) // near leg
-	);
-	const theta = Math.atan( Math.cos(phi) * Math.tan(theta_d) );
+	const far_leg = Math.sin(phi_click);
+	const near_leg = Math.cos(theta_diff) * Math.cos(phi_click); // cos(theta_diff) = near / hyp
+	const phi = Math.atan( far_leg / near_leg );
+	// TODO put pythHyp, pythLeg and similar functions in separate file and import here
+	const theta = Math.acos( Math.sqrt( (far_leg*far_leg) + (near_leg*near_leg) ) );
+
+	let theta_sign = Math.sign( theta_diff );
+	if (Math.abs( theta_sign ) > Math.PI)
+		theta_sign = -theta_sign;
 	
 	return {
-		theta: theta,
+		theta: theta*theta_sign,
 		phi: phi-(cam.phi-Math.PI/2) 
 	};
 };
