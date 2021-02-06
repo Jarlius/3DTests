@@ -189,6 +189,23 @@ function CameraHandler(width, height) {
 
 		return this.verticalProjection(x_diff,theta,phi,camang);
 	};
+
+	// get the "absolute" click angle, not based on camera
+	this.getAbsClickAngle = (cam,click) => {
+		const phi = click.phi+(cam.phi-Math.PI/2);
+		const hyp = Math.cos( click.theta );
+		const far_leg = Math.sin( phi ) * hyp;
+		const near_leg = Math.cos( phi ) * hyp;
+
+		const abs_phi = Math.asin( far_leg );
+		const phi_leg = Math.cos( abs_phi );
+		const abs_theta = Math.acos( near_leg / phi_leg );
+
+		return {
+			theta: Math.sign(click.theta)*abs_theta+cam.theta,
+			phi: abs_phi+Math.PI/2
+		};
+	};
 		
 	this.verticalProjection = (x_diff,theta,phi,camang) => {
 		const diff_r = x_diff / Math.cos( phi );
