@@ -156,10 +156,12 @@ function CameraHandler(width, height) {
 
 		const result = this.checkAngles(angles,camang,x_diff);
 //*
-		console.log(
-			camera.position.y - result.y,
-			camera.position.z - result.z
-		);
+		if (result !== undefined) {
+			console.log(
+				camera.position.y - result.y,
+				camera.position.z - result.z
+			);
+		}
 //*/
 	};
 	
@@ -174,7 +176,6 @@ function CameraHandler(width, height) {
 			( x_diff < 0 && !(0 < absang.theta && absang.theta < Math.PI) ) ||
 			( x_diff > 0 && !(-Math.PI < absang.theta && absang.theta < 0) )
 		) {
-			// signal bad angle? TODO
 			console.log('Bad angle!');
 			return;
 		}
