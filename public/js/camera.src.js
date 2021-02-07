@@ -209,8 +209,6 @@ function CameraHandler(width, height) {
 			y: Math.abs( Math.sin(v)*plane_r ) * Math.sign(phi2),
 			z: Math.abs( Math.cos(v)*plane_r ) * Math.sign(theta2)
 		};
-
-//		return this.verticalProjection(x_diff,theta,phi,camang);
 	};
 
 	// get the "absolute" click angle, not based on camera
@@ -227,55 +225,6 @@ function CameraHandler(width, height) {
 		return {
 			theta: Math.sign(click.theta)*abs_theta+cam.theta,
 			phi: abs_phi+Math.PI/2
-		};
-	};
-		
-	this.verticalProjection = (x_diff,theta,phi,camang) => {
-		const diff_r = x_diff / Math.cos( phi );
-		const cam_r = diff_r / Math.cos( theta );
-		const plane_r = pythLeg(cam_r,x_diff);
-//		console.log('camr',diff_r,cam_r,plane_r);
-
-		const cam_y = Math.sin( phi ) * cam_r;
-		const cam_z = pythLeg( plane_r, cam_y );
-//		console.log('cams',cam_y,cam_z);
-
-		// x_diff is the hypothenuse in a horizontal triangle created by theta
-		const r_leg = Math.cos( theta ) * Math.abs( x_diff );
-		const y_diff = Math.abs( Math.tan( phi + camang.phi ) ) * r_leg;
-		const y_r = pythHyp(x_diff,y_diff);
-//		console.log('y_diff',y_diff);
-//		console.log('y_r',y_r);
-
-		// distance from camera to x_plane along the center y-axis
-		const z_r = x_diff / Math.cos( theta );
-		const phi_r = z_r / Math.cos( phi + camang.phi );
-		const phi_y = pythLeg( phi_r, z_r );
-//		console.log('phi,ydiff',phi_y,y_diff);
-		
-		// theta_r is the hypothenuse of a triangle on the x plane
-		const theta_r = pythHyp(cam_z,phi_y - y_diff);
-//		console.log('thetar',theta_r);
-		// with all sides known, angles can be found on the theta_r-cam triangle
-		const gamma = Math.acos(
-			(square(theta_r) + square(phi_r) - square(y_r))
-			/ Math.abs(2*theta_r*phi_r)
-		);
-//		console.log('gamma',toDeg(gamma));
-		// the angle between the z-axis and theta_r finds the camang.theta_r length
-		const psi = Math.acos( cam_z / theta_r );
-//		console.log('psi',toDeg(psi));
-		
-		// omega + (180-gamma) + camang.theta = 180 => omega = gamma - camang.theta
-		const omega = gamma - (Math.sign( theta ) * camang.theta);
-		const click_r = (phi_r / Math.sin( omega )) * Math.sin( camang.theta );
-		const click_y = Math.sin( psi ) * click_r;
-		const click_z = Math.cos( psi ) * click_r;
-//		console.log('click',click_y,click_z);
-		
-		return {
-			y: Math.sign( phi + camang.phi ) * (phi_y - (Math.sign( theta ) * click_y)),
-			z: (Math.sign( theta ) * cam_z) - click_z
 		};
 	};
 
