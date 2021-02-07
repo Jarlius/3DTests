@@ -167,30 +167,18 @@ function CameraHandler(width, height) {
 		console.log(toDeg(angles.theta),toDeg(angles.phi));
 		console.log(toDeg(camang.theta),toDeg(camang.phi));
 		
-		const theta = Math.abs(angles.theta) - Math.PI/2;
-		const phi = angles.phi - Math.PI/2;
-
-		// check if the click theta angle is bad TODO use this method for other things?
-		const a = 1;
-		const b = Math.cos( phi + camang.phi );
-		const max_theta = Math.atan((b/a)*Math.tan(Math.PI/2 - theta));
-//		console.log('max',toDeg(max_theta));
-
-		// if turned away from the surface, the angle must be greater than max
-		// if turned onto the surface, angle must be less than max
-		const towards = (Math.sign(x_diff) === Math.sign(angles.theta)) ===
-			(Math.sign(angles.theta)*camang.theta > max_theta);
-		// for one side it must be reverted
-		if ((Math.abs(angles.theta) < Math.PI/2) === towards) {
+		const absang = this.getAbsClickAngle(angles,camang);
+		console.log('absang',toDeg(absang.theta),toDeg(absang.phi));
+		
+		if (
+			( x_diff < 0 && !(0 < absang.theta && absang.theta < Math.PI) ) ||
+			( x_diff > 0 && !(-Math.PI < absang.theta && absang.theta < 0) )
+		) {
 			// signal bad angle? TODO
 			console.log('Bad angle!');
 			return;
 		}
-		
-		
-		const absang = this.getAbsClickAngle(angles,camang);
-		console.log('absang',toDeg(absang.theta),toDeg(absang.phi));
-		// TODO maybe move checks to here?
+
 		const theta2 = absang.theta - Math.PI/2;
 		const phi2 = absang.phi - Math.PI/2;
 
