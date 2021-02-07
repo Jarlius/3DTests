@@ -179,23 +179,25 @@ function CameraHandler(width, height) {
 			return;
 		}
 
-		const theta2 = absang.theta - Math.PI/2;
-		const phi2 = absang.phi - Math.PI/2;
+		const center_theta = absang.theta - Math.PI/2;
+		const center_phi = absang.phi - Math.PI/2;
 
-		const click_r = ( x_diff / Math.cos(phi2) ) / Math.cos(theta2);
+		const click_r = ( x_diff / Math.cos(center_phi) ) / Math.cos(center_theta);
 		const plane_r = pythLeg(click_r,x_diff);
 		
-		const l1 = Math.tan(theta2) * x_diff;
-		const l2 = Math.sin(phi2) * click_r;
-		const l3 = pythLeg(click_r,x_diff);
+		const z_leg = Math.tan(center_theta) * x_diff;
+		const y_leg = Math.sin(center_phi) * click_r;
 		
 		// c^2 = a^2 + b^2 - 2*a*b*Math.cos(v)
 		// Math.cos(v) = (a² + b² - c²)/2*a*b
-		const v = Math.acos( (square(l1)+square(l3)-square(l2)) / (2*l1*l3) );
+		const plane_v = Math.acos(
+			(square(z_leg)+square(plane_r)-square(y_leg)) /
+			(2*z_leg*plane_r)
+		);
 		
 		return {
-			y: Math.abs( Math.sin(v)*plane_r ) * Math.sign(phi2),
-			z: Math.abs( Math.cos(v)*plane_r ) * Math.sign(theta2)
+			y: Math.abs( Math.sin(plane_v)*plane_r ) * Math.sign(center_phi),
+			z: Math.abs( Math.cos(plane_v)*plane_r ) * Math.sign(center_theta)
 		};
 	};
 
