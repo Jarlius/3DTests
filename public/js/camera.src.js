@@ -186,8 +186,31 @@ function CameraHandler(width, height) {
 			console.log('Bad angle!');
 			return;
 		}
+		
+		
+		const absang = this.getAbsClickAngle(angles,camang);
+		console.log('absang',toDeg(absang.theta),toDeg(absang.phi));
+		// TODO maybe move checks to here?
+		const theta2 = absang.theta - Math.PI/2;
+		const phi2 = absang.phi - Math.PI/2;
 
-		return this.verticalProjection(x_diff,theta,phi,camang);
+		const click_r = ( x_diff / Math.cos(phi2) ) / Math.cos(theta2);
+		const plane_r = pythLeg(click_r,x_diff);
+		
+		const l1 = Math.tan(theta2) * x_diff;
+		const l2 = Math.sin(phi2) * click_r;
+		const l3 = pythLeg(click_r,x_diff);
+		
+		// c^2 = a^2 + b^2 - 2*a*b*Math.cos(v)
+		// Math.cos(v) = (a² + b² - c²)/2*a*b
+		const v = Math.acos( (square(l1)+square(l3)-square(l2)) / (2*l1*l3) );
+		
+		return {
+			y: Math.abs( Math.sin(v)*plane_r ) * Math.sign(phi2),
+			z: Math.abs( Math.cos(v)*plane_r ) * Math.sign(theta2)
+		};
+
+//		return this.verticalProjection(x_diff,theta,phi,camang);
 	};
 
 	// get the "absolute" click angle, not based on camera
