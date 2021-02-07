@@ -61,6 +61,8 @@ const testSimple = (cam,click) => {
 		camang.theta = camang.theta-Math.PI*2;
 
 	const res = handler.checkAngles(camang,angdiff,-click.x);
+	console.log('ans y:',click.y,res.y);
+	console.log('ans z:',click.z,res.z);
 	if (Math.abs(click.y+res.y) < tol && Math.abs(click.z+res.z) < tol)
 		return true;
 	return false;
@@ -76,7 +78,15 @@ const v = [
 	['accross good quadrants',
 		[2,-2,3],[2,-4,-1]],
 	['hard',
-		[-2,-2,4],[2,-2,2]]
+		[-2,-2,4],[2,-2,2]],
+	['other way',
+		[-4,2,-3],[-3,5,-2]],
+	['other, again',
+		[-3,-2,-1],[-5,-6,4]],
+	['other, accross quadrants',
+		[-1,4,10],[-2,-3,-5]],
+	['other, hard',
+		[2,2,-2],[-3,-2,4]]
 ];
 for (let i=0; i < v.length; i++) {
 	const title = v[i][0];
@@ -84,5 +94,6 @@ for (let i=0; i < v.length; i++) {
 	const click = v[i][2];
 	const test = testSimple({x:cam[0],y:cam[1],z:cam[2]},{x:click[0],y:click[1],z:click[2]})
 	console.log(title,test);
+	console.log();
 }
 
