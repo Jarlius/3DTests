@@ -166,11 +166,7 @@ function CameraHandler(width, height) {
 	};
 	
 	this.checkAngles = (angles,camang,x_diff) => {
-		console.log(toDeg(angles.theta),toDeg(angles.phi));
-		console.log(toDeg(camang.theta),toDeg(camang.phi));
-		
 		const absang = this.getAbsClickAngle(angles,camang);
-		console.log('absang',toDeg(absang.theta),toDeg(absang.phi));
 		
 		if (
 			( x_diff < 0 && !(0 < absang.theta && absang.theta < Math.PI) ) ||
@@ -180,7 +176,8 @@ function CameraHandler(width, height) {
 			return;
 		}
 
-		const center_theta = absang.theta - Math.PI/2;
+		// TODO make the ( (param)+Math.PI*2 ) % Math.PI*2 a math function
+		const center_theta = (absang.theta % Math.PI) - Math.PI/2;
 		const center_phi = absang.phi - Math.PI/2;
 
 		const click_r = ( x_diff / Math.cos(center_phi) ) / Math.cos(center_theta);
@@ -196,9 +193,11 @@ function CameraHandler(width, height) {
 			(2*z_leg*plane_r)
 		);
 		
+		const negxsign = Math.floor( absang.theta / Math.PI ) ? -1 : 1;
+		
 		return {
 			y: Math.abs( Math.sin(plane_v)*plane_r ) * Math.sign(center_phi),
-			z: Math.abs( Math.cos(plane_v)*plane_r ) * Math.sign(center_theta)
+			z: Math.abs( Math.cos(plane_v)*plane_r ) * Math.sign(center_theta) * negxsign
 		};
 	};
 
