@@ -79,14 +79,18 @@ const v = [
 		[2,-2,3],[2,-4,-1]],
 	['hard',
 		[-2,-2,4],[2,-2,2]],
+	['mirrored hard',
+		[-2,-2,-4],[2,-2,-2]],
 	['other way',
 		[-4,2,-3],[-3,5,-2]],
 	['other, again',
 		[-3,-2,-1],[-5,-6,4]],
-	['other, accross quadrants',
+	['other, accross good quadrants',
 		[-1,4,10],[-2,-3,-5]],
-	['other, hard',
-		[2,2,-2],[-3,-2,4]]
+	['accross quadrants, but not over 90 degrees',
+		[-6,-2,2],[-6,2,-2]],
+	['other, hard but not impossible',
+		[2,2,-6],[-2,-2,-4]],
 ];
 for (let i=0; i < v.length; i++) {
 	const title = v[i][0];
