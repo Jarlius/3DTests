@@ -174,7 +174,7 @@ function CameraHandler(width, height) {
 		
 		if (
 			( x_diff < 0 && !(0 < absang.theta && absang.theta < Math.PI) ) ||
-			( x_diff > 0 && !(-Math.PI < absang.theta && absang.theta < 0) )
+			( x_diff > 0 && !(Math.PI < absang.theta && absang.theta < Math.PI*2) )
 		) {
 			console.log('Bad angle!');
 			return;
@@ -214,7 +214,8 @@ function CameraHandler(width, height) {
 		const abs_theta = Math.acos( near_leg / phi_leg );
 
 		return {
-			theta: Math.sign(click.theta)*abs_theta+cam.theta,
+			// TODO make the ( (param)+Math.PI*2 ) % Math.PI*2 a math function
+			theta: (( Math.sign(click.theta)*abs_theta+cam.theta )+(Math.PI*2)) % (Math.PI*2),
 			phi: abs_phi+Math.PI/2
 		};
 	};
