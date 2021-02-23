@@ -1,4 +1,5 @@
 const THREE = require('three');
+const math = require('./math.src.js');
 
 // variables/functions stored outside of the class acts as private
 // but what if several instances of a class? they must share the variable. sad.
@@ -58,21 +59,6 @@ movements.set('D', camera => {
 		moveHorizontal( camera, -dir.y, dir.x );
 	});
 });
-
-const square = a => {
-	return Math.pow(a,2);
-};
-const pythHyp = (a,b) => {
-	return Math.sqrt( square(a) + square(b) );
-};
-const pythLeg = (c,b) => {
-	return Math.sqrt( square(c) - square(b) );
-};
-const toDeg = rad => {
-	return rad*180/Math.PI;
-};
-
-// TODO kanske göra en egen fil för matematiska beräkningar
 
 function CameraHandler(width, height) {
 	const camera = new THREE.PerspectiveCamera(
@@ -166,6 +152,7 @@ function CameraHandler(width, height) {
 	};
 	
 	this.checkAngles = (angles,camang,x_diff) => {
+		// TODO idea: get 90 degree changed absang for fixed Z angles?
 		const absang = this.getAbsClickAngle(angles,camang);
 		
 		if (
@@ -181,7 +168,7 @@ function CameraHandler(width, height) {
 		const center_phi = absang.phi - Math.PI/2;
 
 		const click_r = ( x_diff / Math.cos(center_phi) ) / Math.cos(center_theta);
-		const plane_r = pythLeg(click_r,x_diff);
+		const plane_r = math.pythLeg(click_r,x_diff);
 		
 		const z_leg = Math.tan(center_theta) * x_diff;
 		const y_leg = Math.sin(center_phi) * click_r;
@@ -189,7 +176,7 @@ function CameraHandler(width, height) {
 		// c^2 = a^2 + b^2 - 2*a*b*Math.cos(v)
 		// Math.cos(v) = (a² + b² - c²)/2*a*b
 		const plane_v = Math.acos(
-			(square(z_leg)+square(plane_r)-square(y_leg)) /
+			( math.square(z_leg) + math.square(plane_r) - math.square(y_leg) ) /
 			(2*z_leg*plane_r)
 		);
 		

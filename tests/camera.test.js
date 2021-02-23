@@ -1,4 +1,5 @@
 const CameraHandler = require('../public/js/camera.src.js');
+const math = require('../public/js/math.src.js');
 
 const handler = new CameraHandler(0,0);
 
@@ -7,7 +8,7 @@ const toDeg = rad => {
 };
 
 const cartesianToPolar = (x,y,z) => {
-	const r_theta = Math.sqrt(x*x + z*z);
+	const r_theta = math.pythHyp(x,z);
 	const phi = Math.atan(r_theta/y);// felvänd?
 	const theta = Math.atan(x/z);
 	let quadrant;
@@ -29,7 +30,6 @@ const cartesianToPolar = (x,y,z) => {
 };
 
 // get screen angles between camera center and click
-// TODO test more angles for +/- errors
 const getAngles = (cam,click) =>  {
 	const phi_click = click.phi-Math.PI/2;
 	const theta_diff = click.theta-cam.theta;
@@ -37,8 +37,7 @@ const getAngles = (cam,click) =>  {
 	const far_leg = Math.sin(phi_click);
 	const near_leg = Math.cos(theta_diff) * Math.cos(phi_click); // cos(theta_diff) = near / hyp
 	const phi = Math.atan( far_leg / near_leg );
-	// TODO put pythHyp, pythLeg and similar functions in separate file and import here
-	const theta = Math.acos( Math.sqrt( (far_leg*far_leg) + (near_leg*near_leg) ) );
+	const theta = Math.acos( math.pythHyp(far_leg,near_leg) );
 
 	let theta_sign = Math.sign( theta_diff );
 	if (Math.abs( theta_diff ) > Math.PI)
