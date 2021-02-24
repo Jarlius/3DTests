@@ -176,7 +176,7 @@ function CameraHandler(width, height) {
 		// c^2 = a^2 + b^2 - 2*a*b*Math.cos(v)
 		// Math.cos(v) = (a² + b² - c²)/2*a*b
 		const plane_v = Math.acos(
-			( math.square(z_leg) + math.square(plane_r) - math.square(y_leg) ) /
+			( math.sq(z_leg) + math.sq(plane_r) - math.sq(y_leg) ) /
 			(2*z_leg*plane_r)
 		);
 		
