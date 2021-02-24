@@ -153,7 +153,7 @@ function CameraHandler(width, height) {
 	
 	this.checkAngles = (angles,camang,x_diff) => {
 		// TODO idea: get 90 degree changed absang for fixed Z angles?
-		const absang = this.getAbsClickAngle(angles,camang);
+		const absang = math.getAbsClickAngle(angles,camang);
 		
 		if (
 			( x_diff < 0 && !(0 < absang.theta && absang.theta < Math.PI) ) ||
@@ -185,23 +185,6 @@ function CameraHandler(width, height) {
 		return {
 			y: Math.abs( Math.sin(plane_v)*plane_r ) * Math.sign(center_phi),
 			z: Math.abs( Math.cos(plane_v)*plane_r ) * Math.sign(center_theta) * negxsign
-		};
-	};
-
-	// get the "absolute" click angle, not based on camera
-	this.getAbsClickAngle = (cam,click) => {
-		const phi = click.phi+(cam.phi-Math.PI/2);
-		const hyp = Math.cos( click.theta );
-		const far_leg = Math.sin( phi ) * hyp;
-		const near_leg = Math.cos( phi ) * hyp;
-
-		const abs_phi = Math.asin( far_leg );
-		const phi_leg = Math.cos( abs_phi );
-		const abs_theta = Math.acos( near_leg / phi_leg );
-
-		return {
-			theta: math.thetaNegToPos( Math.sign(click.theta)*abs_theta+cam.theta ),
-			phi: abs_phi+Math.PI/2
 		};
 	};
 
