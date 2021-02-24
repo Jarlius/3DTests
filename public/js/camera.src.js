@@ -200,8 +200,7 @@ function CameraHandler(width, height) {
 		const abs_theta = Math.acos( near_leg / phi_leg );
 
 		return {
-			// TODO make the ( (param)+Math.PI*2 ) % Math.PI*2 a math function
-			theta: (( Math.sign(click.theta)*abs_theta+cam.theta )+(Math.PI*2)) % (Math.PI*2),
+			theta: math.thetaNegToPos( Math.sign(click.theta)*abs_theta+cam.theta ),
 			phi: abs_phi+Math.PI/2
 		};
 	};

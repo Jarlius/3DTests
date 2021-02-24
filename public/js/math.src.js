@@ -10,4 +10,6 @@ exports.pythLeg = (c,b) => {
 exports.toDeg = rad => {
 	return rad*180/Math.PI;
 };
-
+exports.thetaNegToPos = angle => {
+	return ( angle+ (Math.PI*2) ) % (Math.PI*2)
+};
