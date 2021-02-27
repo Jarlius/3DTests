@@ -167,24 +167,13 @@ function CameraHandler(width, height) {
 		const center_theta = (absang.theta % Math.PI) - Math.PI/2;
 		const center_phi = absang.phi - Math.PI/2;
 
-		const click_r = ( x_diff / Math.cos(center_phi) ) / Math.cos(center_theta);
-		const plane_r = math.pythLeg(click_r,x_diff);
-		
-		const z_leg = Math.tan(center_theta) * x_diff;
-		const y_leg = Math.sin(center_phi) * click_r;
-		
-		// c^2 = a^2 + b^2 - 2*a*b*Math.cos(v)
-		// Math.cos(v) = (a² + b² - c²)/2*a*b
-		const plane_v = Math.acos(
-			( math.sq(z_leg) + math.sq(plane_r) - math.sq(y_leg) ) /
-			(2*z_leg*plane_r)
-		);
+		const wallXY = math.getWallCoords(center_theta,center_phi,x_diff);
 		
 		const negxsign = Math.floor( absang.theta / Math.PI ) ? -1 : 1;
 		
 		return {
-			y: Math.abs( Math.sin(plane_v)*plane_r ) * Math.sign(center_phi),
-			z: Math.abs( Math.cos(plane_v)*plane_r ) * Math.sign(center_theta) * negxsign
+			y: Math.abs( wallXY.x ) * Math.sign(center_phi),
+			z: Math.abs( wallXY.y ) * Math.sign(center_theta) * negxsign
 		};
 	};
 

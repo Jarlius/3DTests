@@ -1,10 +1,10 @@
-exports.sq = a => {
+const sq = a => {
 	return a*a;
 };
 exports.pythHyp = (a,b) => {
 	return Math.sqrt( a*a + b*b );
 };
-exports.pythLeg = (c,b) => {
+const pythLeg = (c,b) => {
 	return Math.sqrt( c*c - b*b );
 };
 exports.toDeg = rad => {
@@ -32,3 +32,22 @@ exports.getAbsClickAngle = (cam,click) => {
 	};
 };
 
+// get wall coordinates from (-90,90) angles and (+/-) distance
+exports.getWallCoords = (theta,phi,distance) => {
+	const click_r = ( distance / Math.cos(phi) ) / Math.cos(theta);
+	const plane_r = pythLeg(click_r,distance);
+		
+	const x_leg = Math.tan(theta) * distance;
+	const y_leg = Math.sin(phi) * click_r;
+		
+	// c^2 = a^2 + b^2 - 2*a*b*Math.cos(v)
+	// Math.cos(v) = (a² + b² - c²)/2*a*b
+	const plane_v = Math.acos(
+		( sq(x_leg) + sq(plane_r) - sq(y_leg) ) /
+		(2*x_leg*plane_r)
+	);
+	return {
+		x: Math.sin(plane_v)*plane_r,
+		y: Math.cos(plane_v)*plane_r
+	};
+};
