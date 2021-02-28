@@ -62,8 +62,8 @@ const testSimple = (cam,click) => {
 	const absang = math.getAbsClickAngle(camang,angdiff);
 	const res = handler.checkAngles(absang,-click.x);
 	console.log('ans y:',click.y,res.y);
-	console.log('ans z:',click.z,res.z);
-	if (Math.abs(click.y+res.y) < tol && Math.abs(click.z+res.z) < tol)
+	console.log('ans z:',click.z,res.x);
+	if (Math.abs(click.y+res.y) < tol && Math.abs(click.z+res.x) < tol)
 		return true;
 	return false;
 };
