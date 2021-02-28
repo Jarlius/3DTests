@@ -1,7 +1,4 @@
-const CameraHandler = require('../public/js/camera.src.js');
 const math = require('../public/js/math.src.js');
-
-const handler = new CameraHandler(0,0);
 
 const toDeg = rad => {
 	return rad*180/Math.PI;
@@ -60,7 +57,7 @@ const testSimple = (cam,click) => {
 		camang.theta = camang.theta-Math.PI*2;
 
 	const absang = math.getAbsClickAngle(camang,angdiff);
-	const res = handler.checkAngles(absang,-click.x);
+	const res = math.checkAngles(absang,-click.x);
 	console.log('ans y:',click.y,res.y);
 	console.log('ans z:',click.z,res.x);
 	if (Math.abs(click.y+res.y) < tol && Math.abs(click.z+res.x) < tol)

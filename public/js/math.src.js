@@ -33,7 +33,7 @@ exports.getAbsClickAngle = (cam,click) => {
 };
 
 // get wall coordinates from (-90,90) angles and (+/-) distance
-exports.getWallCoords = (theta,phi,distance) => {
+const getWallCoords = (theta,phi,distance) => {
 	const click_r = ( distance / Math.cos(phi) ) / Math.cos(theta);
 	const plane_r = pythLeg(click_r,distance);
 		
@@ -51,3 +51,28 @@ exports.getWallCoords = (theta,phi,distance) => {
 		y: Math.cos(plane_v)*plane_r
 	};
 };
+
+
+exports.checkAngles = (absang,distance) => {
+	if (
+		( distance < 0 && !(0 < absang.theta && absang.theta < Math.PI) ) ||
+		( distance > 0 && !(Math.PI < absang.theta && absang.theta < Math.PI*2) )
+	) {
+		console.log('Bad angle!');
+		return;
+	}
+
+	// TODO make the ( (param)+Math.PI*2 ) % Math.PI*2 a math function
+	const center_theta = (absang.theta % Math.PI) - Math.PI/2;
+	const center_phi = absang.phi - Math.PI/2;
+
+	const wallXY = getWallCoords(center_theta,center_phi,distance);
+	
+	const negxsign = Math.floor( absang.theta / Math.PI ) ? -1 : 1;
+	
+	return {
+		x: Math.abs( wallXY.y ) * Math.sign(center_theta) * negxsign,
+		y: Math.abs( wallXY.x ) * Math.sign(center_phi)
+	};
+};
+

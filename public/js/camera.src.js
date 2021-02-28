@@ -146,11 +146,11 @@ function CameraHandler(width, height) {
 			theta: absang.theta + (Math.PI/2),
 			phi: absang.phi
 		};
-		const result = this.checkAngles(erb,z_diff);
+		const result = math.checkAngles(erb,z_diff);
 		
 		if (result !== undefined) {
 			console.log(
-				camera.position.x + result.z,
+				camera.position.x + result.x,
 				camera.position.y - result.y
 			);
 		}
@@ -166,7 +166,7 @@ function CameraHandler(width, height) {
 //		console.log(x_diff);
 
 		const absang = math.getAbsClickAngle(angles,camang);
-		const result = this.checkAngles(absang,x_diff);
+		const result = math.checkAngles(absang,x_diff);
 //*
 		if (result !== undefined) {
 			console.log(
@@ -177,29 +177,6 @@ function CameraHandler(width, height) {
 //*/
 	};
 		
-	this.checkAngles = (absang,distance) => {
-		if (
-			( distance < 0 && !(0 < absang.theta && absang.theta < Math.PI) ) ||
-			( distance > 0 && !(Math.PI < absang.theta && absang.theta < Math.PI*2) )
-		) {
-			console.log('Bad angle!');
-			return;
-		}
-
-		// TODO make the ( (param)+Math.PI*2 ) % Math.PI*2 a math function
-		const center_theta = (absang.theta % Math.PI) - Math.PI/2;
-		const center_phi = absang.phi - Math.PI/2;
-
-		const wallXY = math.getWallCoords(center_theta,center_phi,distance);
-		
-		const negxsign = Math.floor( absang.theta / Math.PI ) ? -1 : 1;
-		
-		return {
-			x: Math.abs( wallXY.y ) * Math.sign(center_theta) * negxsign,
-			y: Math.abs( wallXY.x ) * Math.sign(center_phi)
-		};
-	};
-
 	this.hasMovement = (key) => {
 		return movements.has(key);
 	};
