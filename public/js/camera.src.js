@@ -140,6 +140,8 @@ function CameraHandler(width, height) {
 		const zrep = 2;
 		const z_diff = camera.position.z - zrep;
 		console.log(z_diff);
+		
+		// TODO checkAngles for Z
 	};
 	
 	this.getXclick = (x,y,xlevel) => {
@@ -151,7 +153,8 @@ function CameraHandler(width, height) {
 		const x_diff = camera.position.x - xrep;
 //		console.log(x_diff);
 
-		const result = this.checkAngles(angles,camang,x_diff);
+		const absang = math.getAbsClickAngle(angles,camang);
+		const result = this.checkAngles(absang,x_diff);
 //*
 		if (result !== undefined) {
 			console.log(
@@ -161,11 +164,8 @@ function CameraHandler(width, height) {
 		}
 //*/
 	};
-	
-	this.checkAngles = (angles,camang,x_diff) => {
-		// TODO idea: get 90 degree changed absang for fixed Z angles?
-		const absang = math.getAbsClickAngle(angles,camang);
 		
+	this.checkAngles = (absang,x_diff) => {
 		if (
 			( x_diff < 0 && !(0 < absang.theta && absang.theta < Math.PI) ) ||
 			( x_diff > 0 && !(Math.PI < absang.theta && absang.theta < Math.PI*2) )

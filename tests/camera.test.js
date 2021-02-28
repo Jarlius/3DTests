@@ -59,7 +59,8 @@ const testSimple = (cam,click) => {
 	if (camang.theta > Math.PI)
 		camang.theta = camang.theta-Math.PI*2;
 
-	const res = handler.checkAngles(camang,angdiff,-click.x);
+	const absang = math.getAbsClickAngle(camang,angdiff);
+	const res = handler.checkAngles(absang,-click.x);
 	console.log('ans y:',click.y,res.y);
 	console.log('ans z:',click.z,res.z);
 	if (Math.abs(click.y+res.y) < tol && Math.abs(click.z+res.z) < tol)
