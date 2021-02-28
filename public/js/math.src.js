@@ -62,7 +62,6 @@ exports.checkAngles = (theta,phi,distance) => {
 		return;
 	}
 
-	// TODO make the ( (param)+Math.PI*2 ) % Math.PI*2 a math function
 	const center_theta = (theta % Math.PI) - Math.PI/2;
 	const center_phi = phi - Math.PI/2;
 

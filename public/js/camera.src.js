@@ -139,10 +139,12 @@ function CameraHandler(width, height) {
 		// TODO stop replacing once it works properly
 		const zrep = 2;
 		const z_diff = camera.position.z - zrep;
-		console.log(z_diff);
 		
 		const absang = math.getAbsClickAngle(angles,camang);
-		const result = math.checkAngles(absang.theta+(Math.PI/2),absang.phi,z_diff);
+		const result = math.checkAngles(
+			( absang.theta+(Math.PI/2) ) % (Math.PI*2),
+			absang.phi,z_diff
+		);
 		
 		if (result !== undefined) {
 			console.log(
