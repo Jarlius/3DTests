@@ -131,6 +131,17 @@ function CameraHandler(width, height) {
 			z: - real_z + camera.position.z
 		};	
 	};
+	
+	this.getZclick = (x,y,zlevel) => {
+		const angles = getAngles(camera);
+		const camang = getCamAngles(x,y);
+//		const z_diff = camera.position.z - zlevel;
+		// TODO stop replacing once it works properly
+		const zrep = 2;
+		const z_diff = camera.position.z - zrep;
+		console.log(z_diff);
+	};
+	
 	this.getXclick = (x,y,xlevel) => {
 		const angles = getAngles(camera);
 		const camang = getCamAngles(x,y);

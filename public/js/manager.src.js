@@ -51,6 +51,7 @@ function Manager(width, height, parent) {
 
 	var lastclicked = [];
 	var wallbuild = false;
+	var zwall = false;
 	var start = null;
 
 	this.clickLeftDown = (x,y) => {
@@ -84,7 +85,11 @@ function Manager(width, height, parent) {
 			const end = camhandler.getPlaneClick(x,y,ObjectMaker.getLevel());
 			if (wallbuild) {
 				const newtile = ObjectMaker.makeWall(end.x, end.z);
-				camhandler.getXclick(x,y,start.x);
+				if (zwall) {
+					camhandler.getZclick(x,y,start.z);
+				} else {
+					camhandler.getXclick(x,y,start.x);
+				}
 //*
 				if (newtile) {
 //					camhandler.getXclick(x,y,newtile.position.x);
@@ -192,6 +197,10 @@ function Manager(width, height, parent) {
 	keyfuncs.set('B', () => {
 		if (grid !== null)
 			wallbuild = !wallbuild;
+	});
+	keyfuncs.set('N', () => {
+		zwall = !zwall;
+		console.log('z-wall:', zwall);
 	});
 	
 	render();
