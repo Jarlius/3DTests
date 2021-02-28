@@ -53,7 +53,8 @@ const getWallCoords = (theta,phi,distance) => {
 };
 
 
-exports.checkAngles = (theta,phi,distance) => {
+// get wall coordinates from angles, distance: (0,180) -, (180,360) +
+exports.getWallCoords = (theta,phi,distance) => {
 	if (
 		( distance < 0 && !(0 < theta && theta < Math.PI) ) ||
 		( distance > 0 && !(Math.PI < theta && theta < Math.PI*2) )

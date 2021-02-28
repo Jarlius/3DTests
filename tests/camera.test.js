@@ -57,7 +57,7 @@ const testSimple = (cam,click) => {
 		camang.theta = camang.theta-Math.PI*2;
 
 	const absang = math.getAbsClickAngle(camang,angdiff);
-	const res = math.checkAngles(absang.theta,absang.phi,-click.x);
+	const res = math.getWallCoords(absang.theta,absang.phi,-click.x);
 	console.log('ans y:',click.y,res.y);
 	console.log('ans z:',click.z,res.x);
 	if (Math.abs(click.y+res.y) < tol && Math.abs(click.z+res.x) < tol)

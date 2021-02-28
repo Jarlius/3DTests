@@ -141,7 +141,7 @@ function CameraHandler(width, height) {
 		const z_diff = camera.position.z - zrep;
 		
 		const absang = math.getAbsClickAngle(angles,camang);
-		const result = math.checkAngles(
+		const result = math.getWallCoords(
 			( absang.theta+(Math.PI/2) ) % (Math.PI*2),
 			absang.phi,z_diff
 		);
@@ -161,10 +161,9 @@ function CameraHandler(width, height) {
 		// TODO stop replacing once it works properly
 		const xrep = 2;
 		const x_diff = camera.position.x - xrep;
-//		console.log(x_diff);
 
 		const absang = math.getAbsClickAngle(angles,camang);
-		const result = math.checkAngles(absang.theta,absang.phi,x_diff);
+		const result = math.getWallCoords(absang.theta,absang.phi,x_diff);
 //*
 		if (result !== undefined) {
 			console.log(
