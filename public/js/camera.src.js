@@ -142,11 +142,7 @@ function CameraHandler(width, height) {
 		console.log(z_diff);
 		
 		const absang = math.getAbsClickAngle(angles,camang);
-		const erb = {
-			theta: absang.theta + (Math.PI/2),
-			phi: absang.phi
-		};
-		const result = math.checkAngles(erb,z_diff);
+		const result = math.checkAngles(absang.theta+(Math.PI/2),absang.phi,z_diff);
 		
 		if (result !== undefined) {
 			console.log(
@@ -166,7 +162,7 @@ function CameraHandler(width, height) {
 //		console.log(x_diff);
 
 		const absang = math.getAbsClickAngle(angles,camang);
-		const result = math.checkAngles(absang,x_diff);
+		const result = math.checkAngles(absang.theta,absang.phi,x_diff);
 //*
 		if (result !== undefined) {
 			console.log(

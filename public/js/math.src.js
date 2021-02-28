@@ -53,22 +53,22 @@ const getWallCoords = (theta,phi,distance) => {
 };
 
 
-exports.checkAngles = (absang,distance) => {
+exports.checkAngles = (theta,phi,distance) => {
 	if (
-		( distance < 0 && !(0 < absang.theta && absang.theta < Math.PI) ) ||
-		( distance > 0 && !(Math.PI < absang.theta && absang.theta < Math.PI*2) )
+		( distance < 0 && !(0 < theta && theta < Math.PI) ) ||
+		( distance > 0 && !(Math.PI < theta && theta < Math.PI*2) )
 	) {
 		console.log('Bad angle!');
 		return;
 	}
 
 	// TODO make the ( (param)+Math.PI*2 ) % Math.PI*2 a math function
-	const center_theta = (absang.theta % Math.PI) - Math.PI/2;
-	const center_phi = absang.phi - Math.PI/2;
+	const center_theta = (theta % Math.PI) - Math.PI/2;
+	const center_phi = phi - Math.PI/2;
 
 	const wallXY = getWallCoords(center_theta,center_phi,distance);
 	
-	const negxsign = Math.floor( absang.theta / Math.PI ) ? -1 : 1;
+	const negxsign = Math.floor( theta / Math.PI ) ? -1 : 1;
 	
 	return {
 		x: Math.abs( wallXY.y ) * Math.sign(center_theta) * negxsign,
