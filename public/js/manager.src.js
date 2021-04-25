@@ -157,16 +157,11 @@ function Manager(width, height, parent) {
 	const keyfuncs = new Map();
 	
 	keyfuncs.set('V', () => {
-		state = state.clickV();
-		if (grid === null) {
-			ObjectMaker.setColor(lastclicked,0);
-			lastclicked = [];
-			grid = ObjectMaker.makeGrid();
-			scene.add( grid );
-		} else {
-			scene.remove(grid);
-			grid = null;
-		}
+		const result = state.clickV(grid,scene);
+		state = result.state;
+		grid = result.grid;
+		ObjectMaker.setColor(lastclicked,0);
+		lastclicked = [];
 		render();
 	});
 	keyfuncs.set('+', () => {
