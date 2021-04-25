@@ -54,7 +54,7 @@ function Manager(width, height, parent) {
 	var wallbuild = false;
 	var zwall = false;
 	var start = null;
-	var state = new States.normal('hello world');
+	var state = new States.normal();
 
 	this.clickLeftDown = (x,y) => {
 		state.clickLeftDown();
@@ -162,6 +162,7 @@ function Manager(width, height, parent) {
 	const keyfuncs = new Map();
 	
 	keyfuncs.set('V', () => {
+		state = state.clickV();
 		if (grid === null) {
 			setRed(lastclicked,0);
 			lastclicked = [];
