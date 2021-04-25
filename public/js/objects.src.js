@@ -17,6 +17,11 @@ const tiles = new Matrix3D();
 const walls_horizontal = new Matrix3D();
 const walls_vertical = new Matrix3D();
 
+exports.setColor = (objects,col) => {
+	for (let i=0; i < objects.length; i++)
+		objects[i].material.color.r = col;
+};
+
 var editlevel = 0;
 
 exports.getLevel = () => {

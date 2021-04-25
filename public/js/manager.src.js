@@ -6,11 +6,6 @@ const States = require('./states.src.js');
 
 const raycaster = new THREE.Raycaster();
 
-const setRed = (lastclicked,col) => {
-	for (let i=0; i < lastclicked.length; i++)
-		lastclicked[i].material.color.r = col;
-};
-
 function Manager(width, height, parent) {
 	const renderer = new THREE.WebGLRenderer();
 	const rendermap = new Map();
@@ -62,7 +57,7 @@ function Manager(width, height, parent) {
 		if (grid !== null)
 			start = camhandler.getPlaneClick(x,y,ObjectMaker.getLevel());
 		else {
-			setRed(lastclicked,0);
+			ObjectMaker.setColor(lastclicked,0);
 			lastclicked = [];
 			start = null;
 			render();
@@ -164,7 +159,7 @@ function Manager(width, height, parent) {
 	keyfuncs.set('V', () => {
 		state = state.clickV();
 		if (grid === null) {
-			setRed(lastclicked,0);
+			ObjectMaker.setColor(lastclicked,0);
 			lastclicked = [];
 			grid = ObjectMaker.makeGrid();
 			scene.add( grid );
