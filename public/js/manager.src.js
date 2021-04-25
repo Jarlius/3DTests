@@ -183,8 +183,11 @@ function Manager(width, height, parent) {
 		render();
 	});
 	keyfuncs.set('B', () => {
-		if (grid !== null)
-			wallbuild = !wallbuild;
+		if (state.pressB !== undefined) {
+			result = state.pressB();
+			wallbuild = result.bool;
+			state = result.state;
+		}
 	});
 	keyfuncs.set('N', () => {
 		zwall = !zwall;

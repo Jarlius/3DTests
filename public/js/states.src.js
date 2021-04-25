@@ -8,7 +8,7 @@ class Normal {
 		const newgrid = ObjectMaker.makeGrid();
 		scene.add( newgrid );
 		return {
-			state: new BuildBase(),
+			state: new BuildFloor(),
 			grid: newgrid
 		};
 	}
@@ -32,6 +32,24 @@ class BuildBase {
 	pressMinus(grid) {
 		ObjectMaker.incLevel(-1);
 		grid.position.set( 0, ObjectMaker.getLevel(), 0 );
+	}
+}
+
+class BuildFloor extends BuildBase {
+	pressB() {
+		return {
+			bool: true,
+			state: new BuildWall()
+		};
+	}
+}
+
+class BuildWall extends BuildBase {
+	pressB() {
+		return {
+			bool: false,
+			state: new BuildFloor()
+		};
 	}
 }
 
