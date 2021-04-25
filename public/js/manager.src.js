@@ -165,18 +165,12 @@ function Manager(width, height, parent) {
 		render();
 	});
 	keyfuncs.set('+', () => {
-		if (grid !== null) {
-			ObjectMaker.incLevel(1);
-			grid.position.set( 0, ObjectMaker.getLevel(), 0 );
-			render();
-		}
+		state.pressPlus(grid);
+		render();
 	});
 	keyfuncs.set('-', () => {
-		if (grid !== null) {
-			ObjectMaker.incLevel(-1);
-			grid.position.set( 0, ObjectMaker.getLevel(), 0 );
-			render();
-		}
+		state.pressMinus(grid);
+		render();
 	});
 	keyfuncs.set('DELETE', () => {
 		if (lastclicked === [])

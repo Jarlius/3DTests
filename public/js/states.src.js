@@ -29,5 +29,13 @@ function FloorBuild() {
 			grid: null
 		};
 	};
+	this.pressPlus = (grid) => {
+		ObjectMaker.incLevel(1);
+		grid.position.set( 0, ObjectMaker.getLevel(), 0 );
+	};
+	this.pressMinus = (grid) => {
+		ObjectMaker.incLevel(-1);
+		grid.position.set( 0, ObjectMaker.getLevel(), 0 );
+	};
 };
 exports.floorbuild = FloorBuild;
