@@ -2,6 +2,7 @@ const THREE = require('three');
 
 const CameraHandler = require('./camera.src.js');
 const ObjectMaker = require('./objects.src.js');
+const States = require('./states.src.js');
 
 const raycaster = new THREE.Raycaster();
 
@@ -53,8 +54,10 @@ function Manager(width, height, parent) {
 	var wallbuild = false;
 	var zwall = false;
 	var start = null;
+	var state = new States.normal('hello world');
 
 	this.clickLeftDown = (x,y) => {
+		state.clickLeftDown();
 		// TODO determine orientation here already
 		if (grid !== null)
 			start = camhandler.getPlaneClick(x,y,ObjectMaker.getLevel());
