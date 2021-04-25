@@ -49,7 +49,7 @@ function Manager(width, height, parent) {
 	var wallbuild = false;
 	var zwall = false;
 	var start = null;
-	var state = new States.normal();
+	var state = new States.getStartingState();
 
 	this.clickLeftDown = (x,y) => {
 		state.clickLeftDown();
@@ -157,7 +157,7 @@ function Manager(width, height, parent) {
 	const keyfuncs = new Map();
 	
 	keyfuncs.set('V', () => {
-		const result = state.clickV(grid,scene);
+		const result = state.pressV(grid,scene);
 		state = result.state;
 		grid = result.grid;
 		ObjectMaker.setColor(lastclicked,0);
