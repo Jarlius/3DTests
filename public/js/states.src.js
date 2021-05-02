@@ -1,11 +1,26 @@
+const THREE = require('three');
+
 const ObjectMaker = require('./objects.src.js');
+const Raycaster = new THREE.Raycaster();
 
 class Normal {
 	constructor() {
 		this.lastclicked = [];
 	}
-	clickLeftDown() {
+	clickLeftDown(x,y,camhandler,width,height,scene) {
 		ObjectMaker.setColor(this.lastclicked,0);
+		const vector = new THREE.Vector2(
+//			(x - offsetleft) / width * 2 - 1,
+//			- (y - offsettop) / height * 2 + 1
+			x / width * 2 - 1,
+			- y / height * 2 + 1
+		);
+		Raycaster.setFromCamera( vector, camhandler.getCamera() );
+		const intersects = Raycaster.intersectObjects( scene.children );
+					
+		if (intersects.length !== 0)
+			return intersects[0].object.position;
+		return null;
 	}
 	clickLeftUp(start,end) {
 		this.lastclicked = ObjectMaker.findTiles(start,end);

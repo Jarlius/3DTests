@@ -4,8 +4,6 @@ const CameraHandler = require('./camera.src.js');
 const ObjectMaker = require('./objects.src.js');
 const States = require('./states.src.js');
 
-const raycaster = new THREE.Raycaster();
-
 function Manager(width, height, parent) {
 	const renderer = new THREE.WebGLRenderer();
 	const rendermap = new Map();
@@ -52,25 +50,8 @@ function Manager(width, height, parent) {
 
 	this.clickLeftDown = (x,y) => {
 		// TODO determine orientation here already
-		if (grid !== null)
-			start = state.clickLeftDown(x,y,camhandler);
-		else {
-			state.clickLeftDown();
-			start = null;
-			render();
-
-			const vector = new THREE.Vector2(
-//				(x - offsetleft) / width * 2 - 1,
-//				- (y - offsettop) / height * 2 + 1
-				x / width * 2 - 1,
-				- y / height * 2 + 1
-			);
-			raycaster.setFromCamera( vector, camhandler.getCamera() );
-			const intersects = raycaster.intersectObjects( scene.children );
-						
-			if (intersects.length !== 0)
-				start = intersects[0].object.position;
-		}
+		start = state.clickLeftDown(x,y,camhandler,width,height,scene);
+		render();
 	};
 	this.clickLeftUp = (x,y) => {
 		if (grid !== null) {// place an object
