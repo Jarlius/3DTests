@@ -77,6 +77,12 @@ class BuildBase {
 }
 
 class BuildFloor extends BuildBase {
+	clickLeftUp(x,y,camhandler,start,scene) {
+		const end = camhandler.getPlaneClick(x,y,ObjectMaker.getLevel());
+		const newtiles = ObjectMaker.makeTile(end.x, end.z, start);
+		for (let i=0; i < newtiles.length; i++)
+			scene.add( newtiles[i] );
+	}
 	pressB() {
 		return {
 			bool: true,
@@ -86,11 +92,33 @@ class BuildFloor extends BuildBase {
 }
 
 class BuildWall extends BuildBase {
+	constructor() {
+		super();
+		this.zwall = false;
+	}
+	clickLeftUp(x,y,camhandler,start,scene) {
+		const end = camhandler.getPlaneClick(x,y,ObjectMaker.getLevel());
+		const newtile = ObjectMaker.makeWall(end.x, end.z);
+		if (newtile) {
+//			camhandler.getXclick(x,y,newtile.position.x);
+			scene.add( newtile );
+		}
+
+		if (this.zwall) {
+			camhandler.getZclick(x,y,start.z);
+		} else {
+			camhandler.getXclick(x,y,start.x);
+		}
+	}
 	pressB() {
 		return {
 			bool: false,
 			state: new BuildFloor()
 		};
+	}
+	pressN() {
+		this.zwall = !this.zwall;
+		console.log('z-wall:', this.zwall);
 	}
 }
 

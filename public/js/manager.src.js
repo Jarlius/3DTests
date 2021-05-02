@@ -44,7 +44,6 @@ function Manager(width, height, parent) {
 */	};
 
 	var wallbuild = false;
-	var zwall = false;
 	var start = null;
 	var state = new States.getStartingState();
 
@@ -54,30 +53,8 @@ function Manager(width, height, parent) {
 		render();
 	};
 	this.clickLeftUp = (x,y) => {
-		if (grid !== null) {// place an object
-			// TODO different end y level depending on build
-			const end = camhandler.getPlaneClick(x,y,ObjectMaker.getLevel());
-			if (wallbuild) {
-				const newtile = ObjectMaker.makeWall(end.x, end.z);
-				if (zwall) {
-					camhandler.getZclick(x,y,start.z);
-				} else {
-					camhandler.getXclick(x,y,start.x);
-				}
-//*
-				if (newtile) {
-//					camhandler.getXclick(x,y,newtile.position.x);
-					scene.add( newtile );
-				}
-//*/
-			} else {
-				const newtiles = ObjectMaker.makeTile(end.x, end.z, start);
-				for (let i=0; i < newtiles.length; i++)
-					scene.add( newtiles[i] );
-			}
-		} else {// click an object
-			state.clickLeftUp(x,y,camhandler,start);
-		}
+		// TODO different end y level depending on build
+		state.clickLeftUp(x,y,camhandler,start,scene);
 		render();
 	};
 
@@ -148,8 +125,7 @@ function Manager(width, height, parent) {
 		}
 	});
 	keyfuncs.set('N', () => {
-		zwall = !zwall;
-		console.log('z-wall:', zwall);
+		state.pressN();
 	});
 	
 	render();
