@@ -76,12 +76,7 @@ function Manager(width, height, parent) {
 					scene.add( newtiles[i] );
 			}
 		} else {// click an object
-			if (start === null)
-				return;
-
-			const end = camhandler.getPlaneClick(x,y,start.y);
-
-			state.clickLeftUp(start,end);
+			state.clickLeftUp(x,y,camhandler,start);
 		}
 		render();
 	};

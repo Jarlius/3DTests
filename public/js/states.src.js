@@ -22,7 +22,11 @@ class Normal {
 			return intersects[0].object.position;
 		return null;
 	}
-	clickLeftUp(start,end) {
+	clickLeftUp(x,y,camhandler,start) {
+		if (start === null)
+			return;
+		const end = camhandler.getPlaneClick(x,y,start.y);
+
 		this.lastclicked = ObjectMaker.findTiles(start,end);
 		// change color of last clicked object TODO do colors better
 		for (let i=0; i < this.lastclicked.length; i++) {
