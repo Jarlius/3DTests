@@ -1,8 +1,16 @@
 const ObjectMaker = require('./objects.src.js');
 
 class Normal {
-	clickLeftDown() {
-		console.log("normal mode");
+	clickLeftDown(lastclicked) {
+		ObjectMaker.setColor(lastclicked,0);
+	}
+	clickLeftUp(start,end) {
+		const lastclicked = ObjectMaker.findTiles(start,end);
+		for (let i=0; i < lastclicked.length; i++) {
+			lastclicked[i].material.color.r = 1;
+//			lastclicked[i].onClick();
+		}
+		return lastclicked;
 	}
 	pressV(grid,scene,lastclicked) {
 		const newgrid = ObjectMaker.makeGrid();

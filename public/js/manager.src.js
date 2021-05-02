@@ -56,7 +56,7 @@ function Manager(width, height, parent) {
 		if (grid !== null)
 			start = state.clickLeftDown(x,y,camhandler);
 		else {
-			ObjectMaker.setColor(lastclicked,0);
+			state.clickLeftDown(lastclicked);
 			lastclicked = [];
 			start = null;
 			render();
@@ -104,12 +104,7 @@ function Manager(width, height, parent) {
 
 			const end = camhandler.getPlaneClick(x,y,start.y);
 
-			lastclicked = ObjectMaker.findTiles(start,end);
-
-			for (let i=0; i < lastclicked.length; i++) {
-				lastclicked[i].material.color.r = 1;
-//				lastclicked[i].onClick();
-			}
+			lastclicked = state.clickLeftUp(start,end);
 		}
 		render();
 	};
