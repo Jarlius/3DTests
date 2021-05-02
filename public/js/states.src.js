@@ -12,6 +12,14 @@ class Normal {
 			grid: newgrid
 		};
 	}
+	pressDelete(scene,lastclicked) {
+		if (lastclicked === [])
+			return;
+		for (let i=0; i < lastclicked.length; i++) {
+			scene.remove( lastclicked[i] );
+			ObjectMaker.removeTile( lastclicked[i].position );
+		}
+	}
 }
 
 class BuildBase {

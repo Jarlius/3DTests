@@ -172,12 +172,7 @@ function Manager(width, height, parent) {
 		render();
 	});
 	keyfuncs.set('DELETE', () => {
-		if (lastclicked === [])
-			return;
-		for (let i=0; i < lastclicked.length; i++) {
-			scene.remove( lastclicked[i] );
-			ObjectMaker.removeTile( lastclicked[i].position );
-		}
+		state.pressDelete(scene,lastclicked);
 		lastclicked = [];
 		render();
 	});
