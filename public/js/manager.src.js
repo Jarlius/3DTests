@@ -52,10 +52,9 @@ function Manager(width, height, parent) {
 	var state = new States.getStartingState();
 
 	this.clickLeftDown = (x,y) => {
-		state.clickLeftDown();
 		// TODO determine orientation here already
 		if (grid !== null)
-			start = camhandler.getPlaneClick(x,y,ObjectMaker.getLevel());
+			start = state.clickLeftDown(x,y,camhandler);
 		else {
 			ObjectMaker.setColor(lastclicked,0);
 			lastclicked = [];

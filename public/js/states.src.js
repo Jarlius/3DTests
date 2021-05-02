@@ -15,8 +15,8 @@ class Normal {
 }
 
 class BuildBase {
-	clickLeftDown() {
-		console.log("floor build mode");
+	clickLeftDown(x,y,camhandler) {
+		return camhandler.getPlaneClick(x,y,ObjectMaker.getLevel());
 	}
 	pressV(grid,scene) {
 		scene.remove(grid);
