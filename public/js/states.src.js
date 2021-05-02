@@ -1,33 +1,38 @@
 const ObjectMaker = require('./objects.src.js');
 
 class Normal {
-	clickLeftDown(lastclicked) {
-		ObjectMaker.setColor(lastclicked,0);
+	constructor() {
+		this.lastclicked = [];
+	}
+	clickLeftDown() {
+		ObjectMaker.setColor(this.lastclicked,0);
 	}
 	clickLeftUp(start,end) {
-		const lastclicked = ObjectMaker.findTiles(start,end);
-		for (let i=0; i < lastclicked.length; i++) {
-			lastclicked[i].material.color.r = 1;
-//			lastclicked[i].onClick();
+		this.lastclicked = ObjectMaker.findTiles(start,end);
+		// change color of last clicked object TODO do colors better
+		for (let i=0; i < this.lastclicked.length; i++) {
+			this.lastclicked[i].material.color.r = 1;
+//			this.lastclicked[i].onClick();
 		}
-		return lastclicked;
 	}
-	pressV(grid,scene,lastclicked) {
+	pressV(grid,scene) {
 		const newgrid = ObjectMaker.makeGrid();
 		scene.add( newgrid );
-		ObjectMaker.setColor(lastclicked,0);
+		ObjectMaker.setColor(this.lastclicked,0);
+		this.lastclicked = [];
 		return {
 			state: new BuildFloor(),
 			grid: newgrid
 		};
 	}
-	pressDelete(scene,lastclicked) {
-		if (lastclicked === [])
+	pressDelete(scene) {
+		if (this.lastclicked === [])
 			return;
-		for (let i=0; i < lastclicked.length; i++) {
-			scene.remove( lastclicked[i] );
-			ObjectMaker.removeTile( lastclicked[i].position );
+		for (let i=0; i < this.lastclicked.length; i++) {
+			scene.remove( this.lastclicked[i] );
+			ObjectMaker.removeTile( this.lastclicked[i].position );
 		}
+		this.lastclicked = [];
 	}
 }
 

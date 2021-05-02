@@ -45,7 +45,6 @@ function Manager(width, height, parent) {
 		});
 */	};
 
-	var lastclicked = [];
 	var wallbuild = false;
 	var zwall = false;
 	var start = null;
@@ -56,8 +55,7 @@ function Manager(width, height, parent) {
 		if (grid !== null)
 			start = state.clickLeftDown(x,y,camhandler);
 		else {
-			state.clickLeftDown(lastclicked);
-			lastclicked = [];
+			state.clickLeftDown();
 			start = null;
 			render();
 
@@ -69,9 +67,7 @@ function Manager(width, height, parent) {
 			);
 			raycaster.setFromCamera( vector, camhandler.getCamera() );
 			const intersects = raycaster.intersectObjects( scene.children );
-			
-			// change color of last clicked object TODO do colors better
-			
+						
 			if (intersects.length !== 0)
 				start = intersects[0].object.position;
 		}
@@ -104,7 +100,7 @@ function Manager(width, height, parent) {
 
 			const end = camhandler.getPlaneClick(x,y,start.y);
 
-			lastclicked = state.clickLeftUp(start,end);
+			state.clickLeftUp(start,end);
 		}
 		render();
 	};
@@ -151,10 +147,9 @@ function Manager(width, height, parent) {
 	const keyfuncs = new Map();
 	
 	keyfuncs.set('V', () => {
-		const result = state.pressV(grid,scene,lastclicked);
+		const result = state.pressV(grid,scene);
 		state = result.state;
 		grid = result.grid;
-		lastclicked = [];
 		render();
 	});
 	keyfuncs.set('+', () => {
@@ -166,8 +161,7 @@ function Manager(width, height, parent) {
 		render();
 	});
 	keyfuncs.set('DELETE', () => {
-		state.pressDelete(scene,lastclicked);
-		lastclicked = [];
+		state.pressDelete(scene);
 		render();
 	});
 	keyfuncs.set('B', () => {
