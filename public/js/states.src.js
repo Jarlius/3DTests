@@ -4,9 +4,10 @@ class Normal {
 	clickLeftDown() {
 		console.log("normal mode");
 	}
-	pressV(grid,scene) {
+	pressV(grid,scene,lastclicked) {
 		const newgrid = ObjectMaker.makeGrid();
 		scene.add( newgrid );
+		ObjectMaker.setColor(lastclicked,0);
 		return {
 			state: new BuildFloor(),
 			grid: newgrid

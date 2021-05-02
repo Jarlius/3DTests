@@ -156,10 +156,9 @@ function Manager(width, height, parent) {
 	const keyfuncs = new Map();
 	
 	keyfuncs.set('V', () => {
-		const result = state.pressV(grid,scene);
+		const result = state.pressV(grid,scene,lastclicked);
 		state = result.state;
 		grid = result.grid;
-		ObjectMaker.setColor(lastclicked,0);
 		lastclicked = [];
 		render();
 	});
