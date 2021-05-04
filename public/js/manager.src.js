@@ -34,8 +34,6 @@ function Manager(width, height, parent) {
 	
 //	scene.add( ObjectMaker.makeLine() );
 	
-	var grid = null;
-
 	const render = () => {
 		renderer.render( scene, camhandler.getCamera() );
 /*		camhandler.render(camera => {
@@ -100,17 +98,15 @@ function Manager(width, height, parent) {
 	const keyfuncs = new Map();
 	
 	keyfuncs.set('V', () => {
-		const result = state.pressV(grid,scene);
-		state = result.state;
-		grid = result.grid;
+		state = state.pressV(scene);
 		render();
 	});
 	keyfuncs.set('+', () => {
-		state.pressPlus(grid);
+		state.pressPlus();
 		render();
 	});
 	keyfuncs.set('-', () => {
-		state.pressMinus(grid);
+		state.pressMinus();
 		render();
 	});
 	keyfuncs.set('DELETE', () => {
@@ -119,7 +115,7 @@ function Manager(width, height, parent) {
 	});
 	keyfuncs.set('B', () => {
 		if (state.pressB !== undefined) {
-			result = state.pressB();
+			result = state.pressB(scene);
 			wallbuild = result.bool;
 			state = result.state;
 		}

@@ -34,15 +34,10 @@ class Normal {
 //			this.lastclicked[i].onClick();
 		}
 	}
-	pressV(grid,scene) {
-		const newgrid = ObjectMaker.makeGrid();
-		scene.add( newgrid );
+	pressV(scene) {
 		ObjectMaker.setColor(this.lastclicked,0);
 		this.lastclicked = [];
-		return {
-			state: new BuildFloor(),
-			grid: newgrid
-		};
+		return new BuildFloor(scene);
 	}
 	pressDelete(scene) {
 		if (this.lastclicked === [])
@@ -56,23 +51,24 @@ class Normal {
 }
 
 class BuildBase {
+	constructor(scene) {
+		this.grid = ObjectMaker.makeGrid();
+		scene.add( this.grid );
+	}
 	clickLeftDown(x,y,camhandler) {
 		return camhandler.getPlaneClick(x,y,ObjectMaker.getLevel());
 	}
-	pressV(grid,scene) {
-		scene.remove(grid);
-		return {
-			state: new Normal(),
-			grid: null
-		};
+	pressV(scene) {
+		scene.remove(this.grid);
+		return new Normal();
 	}
-	pressPlus(grid) {
+	pressPlus() {
 		ObjectMaker.incLevel(1);
-		grid.position.set( 0, ObjectMaker.getLevel(), 0 );
+		this.grid.position.set( 0, ObjectMaker.getLevel(), 0 );
 	}
-	pressMinus(grid) {
+	pressMinus() {
 		ObjectMaker.incLevel(-1);
-		grid.position.set( 0, ObjectMaker.getLevel(), 0 );
+		this.grid.position.set( 0, ObjectMaker.getLevel(), 0 );
 	}
 }
 
@@ -83,17 +79,18 @@ class BuildFloor extends BuildBase {
 		for (let i=0; i < newtiles.length; i++)
 			scene.add( newtiles[i] );
 	}
-	pressB() {
+	pressB(scene) {
+		scene.remove(this.grid);
 		return {
 			bool: true,
-			state: new BuildWall()
+			state: new BuildWall(scene)
 		};
 	}
 }
 
 class BuildWall extends BuildBase {
-	constructor() {
-		super();
+	constructor(scene) {
+		super(scene);
 		this.zwall = false;
 	}
 	clickLeftUp(x,y,camhandler,start,scene) {
@@ -110,10 +107,11 @@ class BuildWall extends BuildBase {
 			camhandler.getXclick(x,y,start.x);
 		}
 	}
-	pressB() {
+	pressB(scene) {
+		scene.remove(this.grid);
 		return {
 			bool: false,
-			state: new BuildFloor()
+			state: new BuildFloor(scene)
 		};
 	}
 	pressN() {
