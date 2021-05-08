@@ -24,6 +24,10 @@ exports.setColor = (objects,col) => {
 
 var editlevel = 0;
 
+function makeGrid() {
+	return new THREE.GridHelper( grid_size*block, grid_size );
+}
+
 exports.getLevel = () => {
 	return editlevel;
 };
@@ -32,8 +36,8 @@ exports.incLevel = inc => {
 	editlevel += block * inc;
 };
 
-exports.makeGrid = () => {
-	const grid = new THREE.GridHelper( grid_size*block, grid_size );
+exports.makeYGrid = () => {
+	const grid = makeGrid();
 	grid.position.set( 0, editlevel, 0);
 	return grid;
 };

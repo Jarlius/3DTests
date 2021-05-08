@@ -52,7 +52,7 @@ class Normal {
 
 class BuildBase {
 	constructor(scene) {
-		this.grid = ObjectMaker.makeGrid();
+		this.grid = ObjectMaker.makeYGrid();
 		scene.add( this.grid );
 	}
 	clickLeftDown(x,y,camhandler) {
