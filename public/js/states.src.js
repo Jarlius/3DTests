@@ -81,10 +81,7 @@ class BuildFloor extends BuildBase {
 	}
 	pressB(scene) {
 		scene.remove(this.grid);
-		return {
-			bool: true,
-			state: new BuildWall(scene)
-		};
+		return new BuildWall(scene);
 	}
 }
 
@@ -109,10 +106,7 @@ class BuildWall extends BuildBase {
 	}
 	pressB(scene) {
 		scene.remove(this.grid);
-		return {
-			bool: false,
-			state: new BuildFloor(scene)
-		};
+		return new BuildFloor(scene);
 	}
 	pressN() {
 		this.zwall = !this.zwall;

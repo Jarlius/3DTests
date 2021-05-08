@@ -41,7 +41,6 @@ function Manager(width, height, parent) {
 		});
 */	};
 
-	var wallbuild = false;
 	var start = null;
 	var state = new States.getStartingState();
 
@@ -115,9 +114,7 @@ function Manager(width, height, parent) {
 	});
 	keyfuncs.set('B', () => {
 		if (state.pressB !== undefined) {
-			result = state.pressB(scene);
-			wallbuild = result.bool;
-			state = result.state;
+			state = state.pressB(scene);
 		}
 	});
 	keyfuncs.set('N', () => {
