@@ -42,6 +42,13 @@ exports.makeYGrid = () => {
 	return grid;
 };
 
+exports.makeZGrid = () => {
+	const grid = makeGrid();
+	grid.position.set( 0, 0, editlevel );
+	grid.lookAt( 0, 1, editlevel );
+	return grid;
+};
+
 exports.makeTile = (x,z, start) => { // TODO use startcooords (third arg) to create multiple tiles
 	const start_x = Math.floor(start.x/block);
 	const start_z = Math.floor(start.z/block);

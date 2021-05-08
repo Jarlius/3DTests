@@ -51,10 +51,6 @@ class Normal {
 }
 
 class BuildBase {
-	constructor(scene) {
-		this.grid = ObjectMaker.makeYGrid();
-		scene.add( this.grid );
-	}
 	clickLeftDown(x,y,camhandler) {
 		return camhandler.getPlaneClick(x,y,ObjectMaker.getLevel());
 	}
@@ -73,6 +69,11 @@ class BuildBase {
 }
 
 class BuildFloor extends BuildBase {
+	constructor(scene) {
+		super();
+		this.grid = ObjectMaker.makeYGrid();
+		scene.add( this.grid );
+	};
 	clickLeftUp(x,y,camhandler,start,scene) {
 		const end = camhandler.getPlaneClick(x,y,ObjectMaker.getLevel());
 		const newtiles = ObjectMaker.makeTile(end.x, end.z, start);
@@ -87,7 +88,9 @@ class BuildFloor extends BuildBase {
 
 class BuildWall extends BuildBase {
 	constructor(scene) {
-		super(scene);
+		super();
+		this.grid = ObjectMaker.makeZGrid();
+		scene.add( this.grid );
 		this.zwall = false;
 	}
 	clickLeftUp(x,y,camhandler,start,scene) {

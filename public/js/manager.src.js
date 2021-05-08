@@ -116,6 +116,7 @@ function Manager(width, height, parent) {
 		if (state.pressB !== undefined) {
 			state = state.pressB(scene);
 		}
+		render();
 	});
 	keyfuncs.set('N', () => {
 		state.pressN();
