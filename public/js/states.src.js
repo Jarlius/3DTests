@@ -58,14 +58,6 @@ class BuildBase {
 		scene.remove(this.grid);
 		return new Normal();
 	}
-	pressPlus() {
-		ObjectMaker.incLevel(1);
-		this.grid.position.set( 0, ObjectMaker.getLevel(), 0 );
-	}
-	pressMinus() {
-		ObjectMaker.incLevel(-1);
-		this.grid.position.set( 0, ObjectMaker.getLevel(), 0 );
-	}
 }
 
 class BuildFloor extends BuildBase {
@@ -83,6 +75,14 @@ class BuildFloor extends BuildBase {
 	pressB(scene) {
 		scene.remove(this.grid);
 		return new BuildWall(scene);
+	}
+	pressPlus() {
+		ObjectMaker.incLevel(1);
+		this.grid.position.set( 0, ObjectMaker.getLevel(), 0 );
+	}
+	pressMinus() {
+		ObjectMaker.incLevel(-1);
+		this.grid.position.set( 0, ObjectMaker.getLevel(), 0 );
 	}
 }
 
@@ -114,6 +114,12 @@ class BuildWall extends BuildBase {
 	pressN() {
 		this.zwall = !this.zwall;
 		console.log('z-wall:', this.zwall);
+	}
+	pressPlus() {
+		this.grid.position.set( 0, 0, ObjectMaker.incZlevel(1) );
+	}
+	pressMinus() {
+		this.grid.position.set( 0, 0, ObjectMaker.incZlevel(-1) );
 	}
 }
 
