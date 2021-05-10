@@ -74,7 +74,7 @@ class BuildFloor extends BuildBase {
 	}
 	pressB(scene) {
 		scene.remove(this.grid);
-		return new BuildWall(scene);
+		return new BuildZWall(scene);
 	}
 	pressPlus() {
 		ObjectMaker.incLevel(1);
@@ -87,11 +87,10 @@ class BuildFloor extends BuildBase {
 }
 
 class BuildWall extends BuildBase {
-	constructor(scene) {
+	constructor(scene,grid) {
 		super();
-		this.grid = ObjectMaker.makeZGrid();
-		scene.add( this.grid );
-		this.zwall = false;
+		this.grid = grid;
+		scene.add( grid );
 	}
 	clickLeftUp(x,y,camhandler,start,scene) {
 		const end = camhandler.getPlaneClick(x,y,ObjectMaker.getLevel());
@@ -102,8 +101,10 @@ class BuildWall extends BuildBase {
 		}
 
 		if (this.zwall) {
+			console.log('z click');
 			camhandler.getZclick(x,y,start.z);
 		} else {
+			console.log('x click');
 			camhandler.getXclick(x,y,start.x);
 		}
 	}
@@ -111,15 +112,33 @@ class BuildWall extends BuildBase {
 		scene.remove(this.grid);
 		return new BuildFloor(scene);
 	}
-	pressN() {
-		this.zwall = !this.zwall;
-		console.log('z-wall:', this.zwall);
-	}
 	pressPlus() {
 		this.grid.position.set( 0, 0, ObjectMaker.incZlevel(1) );
 	}
 	pressMinus() {
 		this.grid.position.set( 0, 0, ObjectMaker.incZlevel(-1) );
+	}
+}
+
+class BuildXWall extends BuildWall {
+	constructor(scene) {
+		super(scene,ObjectMaker.makeZGrid());//TODO make X grid
+		this.zwall = false;
+	}
+	pressN(scene) {
+		scene.remove(this.grid);
+		return new BuildZWall(scene);
+	}
+}
+
+class BuildZWall extends BuildWall {
+	constructor(scene) {
+		super(scene,ObjectMaker.makeZGrid());
+		this.zwall = true;
+	}
+	pressN(scene) {
+		scene.remove(this.grid);
+		return new BuildXWall(scene);
 	}
 }
 
