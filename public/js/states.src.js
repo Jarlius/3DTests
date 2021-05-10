@@ -112,12 +112,6 @@ class BuildWall extends BuildBase {
 		scene.remove(this.grid);
 		return new BuildFloor(scene);
 	}
-	pressPlus() {
-		this.grid.position.set( 0, 0, ObjectMaker.incZlevel(1) );
-	}
-	pressMinus() {
-		this.grid.position.set( 0, 0, ObjectMaker.incZlevel(-1) );
-	}
 }
 
 class BuildXWall extends BuildWall {
@@ -129,6 +123,12 @@ class BuildXWall extends BuildWall {
 		scene.remove(this.grid);
 		return new BuildZWall(scene);
 	}
+	pressPlus() {
+		this.grid.position.set( ObjectMaker.incXlevel(1), 0, 0 );
+	}
+	pressMinus() {
+		this.grid.position.set( ObjectMaker.incXlevel(-1), 0, 0 );
+	}
 }
 
 class BuildZWall extends BuildWall {
@@ -139,6 +139,12 @@ class BuildZWall extends BuildWall {
 	pressN(scene) {
 		scene.remove(this.grid);
 		return new BuildXWall(scene);
+	}
+	pressPlus() {
+		this.grid.position.set( 0, 0, ObjectMaker.incZlevel(1) );
+	}
+	pressMinus() {
+		this.grid.position.set( 0, 0, ObjectMaker.incZlevel(-1) );
 	}
 }
 

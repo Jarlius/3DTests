@@ -40,6 +40,9 @@ exports.incLevel = inc => {
 exports.incZlevel = inc => {
 	return zlevel += block * inc;
 };
+exports.incXlevel = inc => {
+	return xlevel += block * inc;
+};
 
 exports.makeYGrid = () => {
 	const grid = makeGrid();
