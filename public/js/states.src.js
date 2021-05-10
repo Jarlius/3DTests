@@ -122,7 +122,7 @@ class BuildWall extends BuildBase {
 
 class BuildXWall extends BuildWall {
 	constructor(scene) {
-		super(scene,ObjectMaker.makeZGrid());//TODO make X grid
+		super(scene,ObjectMaker.makeXGrid());
 		this.zwall = false;
 	}
 	pressN(scene) {

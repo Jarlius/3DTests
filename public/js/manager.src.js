@@ -120,6 +120,7 @@ function Manager(width, height, parent) {
 	});
 	keyfuncs.set('N', () => {
 		state = state.pressN(scene);
+		render();
 	});
 	
 	render();

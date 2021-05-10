@@ -23,6 +23,7 @@ exports.setColor = (objects,col) => {
 };
 
 var editlevel = 0;
+var xlevel = 0;
 var zlevel = 0;
 
 function makeGrid() {
@@ -43,6 +44,14 @@ exports.incZlevel = inc => {
 exports.makeYGrid = () => {
 	const grid = makeGrid();
 	grid.position.set( 0, editlevel, 0);
+	return grid;
+};
+
+exports.makeXGrid = () => {
+	const grid = makeGrid();
+	grid.position.set( xlevel, 0, 0 );
+	grid.lookAt( xlevel, 1, 0 );
+	grid.rotateZ( Math.PI/2 );
 	return grid;
 };
 
