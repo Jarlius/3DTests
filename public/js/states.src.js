@@ -99,14 +99,6 @@ class BuildWall extends BuildBase {
 //			camhandler.getXclick(x,y,newtile.position.x);
 			scene.add( newtile );
 		}
-
-		if (this.zwall) {
-			console.log('z click');
-			camhandler.getZclick(x,y,start.z);
-		} else {
-			console.log('x click');
-			camhandler.getXclick(x,y,start.x);
-		}
 	}
 	pressB(scene) {
 		scene.remove(this.grid);
@@ -117,7 +109,10 @@ class BuildWall extends BuildBase {
 class BuildXWall extends BuildWall {
 	constructor(scene) {
 		super(scene,ObjectMaker.makeXGrid());
-		this.zwall = false;
+	}
+	clickLeftDown(x,y,camhandler) {
+		console.log('x click');
+		camhandler.getXclick(x,y,ObjectMaker.getXLevel());
 	}
 	pressN(scene) {
 		scene.remove(this.grid);
@@ -134,7 +129,10 @@ class BuildXWall extends BuildWall {
 class BuildZWall extends BuildWall {
 	constructor(scene) {
 		super(scene,ObjectMaker.makeZGrid());
-		this.zwall = true;
+	}
+	clickLeftDown(x,y,camhandler) {
+		console.log('z click');
+		camhandler.getZclick(x,y,ObjectMaker.getZLevel());
 	}
 	pressN(scene) {
 		scene.remove(this.grid);

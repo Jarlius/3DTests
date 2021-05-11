@@ -135,10 +135,7 @@ function CameraHandler(width, height) {
 	this.getZclick = (x,y,zlevel) => {
 		const angles = getAngles(camera);
 		const camang = getCamAngles(x,y);
-//		const z_diff = camera.position.z - zlevel;
-		// TODO stop replacing once it works properly
-		const zrep = 2;
-		const z_diff = camera.position.z - zrep;
+		const z_diff = camera.position.z - zlevel;
 		
 		const absang = math.getAbsClickAngle(angles,camang);
 		const result = math.getWallCoords(
@@ -157,10 +154,7 @@ function CameraHandler(width, height) {
 	this.getXclick = (x,y,xlevel) => {
 		const angles = getAngles(camera);
 		const camang = getCamAngles(x,y);
-//		const x_diff = camera.position.x - xlevel;
-		// TODO stop replacing once it works properly
-		const xrep = 2;
-		const x_diff = camera.position.x - xrep;
+		const x_diff = camera.position.x - xlevel;
 
 		const absang = math.getAbsClickAngle(angles,camang);
 		const result = math.getWallCoords(absang.theta,absang.phi,x_diff);

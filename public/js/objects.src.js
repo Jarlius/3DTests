@@ -33,6 +33,12 @@ function makeGrid() {
 exports.getLevel = () => {
 	return editlevel;
 };
+exports.getXLevel = () => {
+	return xlevel;
+};
+exports.getZLevel = () => {
+	return zlevel;
+};
 
 exports.incLevel = inc => {
 	editlevel += block * inc;
