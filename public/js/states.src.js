@@ -92,6 +92,7 @@ class BuildWall extends BuildBase {
 		this.grid = grid;
 		scene.add( grid );
 	}
+	// always overridden, left to show next step TODO remove
 	clickLeftUp(x,y,camhandler,start,scene) {
 		const end = camhandler.getPlaneClick(x,y,ObjectMaker.getLevel());
 		const newtile = ObjectMaker.makeWall(end.x, end.z);
@@ -114,6 +115,10 @@ class BuildXWall extends BuildWall {
 		console.log('x click');
 		camhandler.getXclick(x,y,ObjectMaker.getXLevel());
 	}
+	clickLeftUp(x,y,camhandler,start,scene) {
+		const end = camhandler.getXclick(x,y,ObjectMaker.getXLevel());
+		ObjectMaker.makeXWall(end.z,end.y);
+	}
 	pressN(scene) {
 		scene.remove(this.grid);
 		return new BuildZWall(scene);
@@ -133,6 +138,10 @@ class BuildZWall extends BuildWall {
 	clickLeftDown(x,y,camhandler) {
 		console.log('z click');
 		camhandler.getZclick(x,y,ObjectMaker.getZLevel());
+	}
+	clickLeftUp(x,y,camhandler,start,scene) {
+		const end = camhandler.getZclick(x,y,ObjectMaker.getZLevel());
+		ObjectMaker.makeZWall(end.x,end.y);
 	}
 	pressN(scene) {
 		scene.remove(this.grid);

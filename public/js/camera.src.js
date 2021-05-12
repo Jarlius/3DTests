@@ -144,10 +144,12 @@ function CameraHandler(width, height) {
 		);
 		
 		if (result !== undefined) {
-			console.log(
-				camera.position.x + result.x,
-				camera.position.y - result.y
-			);
+			return {
+				x: camera.position.x + result.x,
+				y: camera.position.y - result.y
+			};
+		} else {
+			// TODO make it Bad angle! safe
 		}
 	};
 	
@@ -158,14 +160,15 @@ function CameraHandler(width, height) {
 
 		const absang = math.getAbsClickAngle(angles,camang);
 		const result = math.getWallCoords(absang.theta,absang.phi,x_diff);
-//*
+		
 		if (result !== undefined) {
-			console.log(
-				camera.position.z - result.x,
-				camera.position.y - result.y
-			);
+			return {
+				z: camera.position.z - result.x,
+				y: camera.position.y - result.y
+			};
+		} else {
+			// TODO make it Bad angle! safe
 		}
-//*/
 	};
 		
 	this.hasMovement = (key) => {

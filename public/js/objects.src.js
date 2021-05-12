@@ -134,6 +134,18 @@ exports.findTiles = (start,end) => {
 	return arr;
 };
 
+exports.makeXWall = (x,y) => {
+	// nothing right now, just stop regular makeWall TODO do more
+	console.log('make X wall');
+	console.log(x,y);
+}
+
+exports.makeZWall = (x,y) => {
+	// nothing right now, just stop regular makeWall TODO do more
+	console.log('make Z wall');
+	console.log(x,y);
+};
+
 exports.makeWall = (x,z) => {
 	const material = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
 	material.side = THREE.DoubleSide;
