@@ -142,7 +142,8 @@ class BuildZWall extends BuildWall {
 	clickLeftUp(x,y,camhandler,start,scene) {
 		const end = camhandler.getZclick(x,y,ObjectMaker.getZLevel());
 		const newtile = ObjectMaker.makeZWall(end.x,end.y);
-		scene.add(newtile);
+		if (newtile)
+			scene.add(newtile);
 	}
 	pressN(scene) {
 		scene.remove(this.grid);
