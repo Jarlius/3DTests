@@ -14,9 +14,6 @@ const plane_geometry = new THREE.PlaneGeometry( tile_size, tile_size );
 const wire_geometry = new THREE.WireframeGeometry( box_geometry );
 
 const tiles = new Matrix3D();
-const walls_horizontal = new Matrix3D();
-const walls_vertical = new Matrix3D();
-
 const walls_x = new Matrix3D();
 const walls_z = new Matrix3D();
 
@@ -118,8 +115,8 @@ exports.removeTile = pos => {
 	const tile_y = Math.floor(pos.y/block);
 	const tile_z = Math.floor(pos.z/block);
 	tiles.del(tile_x, tile_y, tile_z);
-	walls_horizontal.del(tile_x, tile_y, tile_z);
-	walls_vertical.del(tile_x, tile_y, tile_z);
+//	walls_horizontal.del(tile_x, tile_y, tile_z);
+//	walls_vertical.del(tile_x, tile_y, tile_z);
 };
 
 exports.findTiles = (start,end) => {
@@ -176,53 +173,6 @@ exports.makeZWall = (x,y) => {
 		return false;
 	
 	wall.position.set( coords.x, coords.y, zlevel );
-	return wall;
-};
-
-exports.makeWall = (x,z) => {
-	const material = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
-	material.side = THREE.DoubleSide;
-	const wall = new THREE.Mesh( plane_geometry, material );
-	wall.onClick = () => {
-		console.log('wall');
-	};
-	
-	var tile_x = Math.floor(x/block);
-	var tile_y = editlevel/block;
-	var tile_z = Math.floor(z/block);
-
-	var part_x = x % block;
-	if (part_x < 0)
-		part_x += block;
-	var part_z = z % block;
-	if (part_z < 0)
-		part_z += block;
-
-	var real_x;
-	const real_y = editlevel + block/2;
-	var real_z;
-	
-	const far = part_x + part_z > block;
-	const right = part_x < part_z;
-	var available;
-	if (far && right || !far && !right) {
-		wall.lookAt(0, 0, 1);
-		tile_z += far;
-		real_x = (tile_x + 0.5) * block;
-		real_z = tile_z * block;
-		available = walls_vertical.add(tile_x,tile_y,tile_z);
-	} else {
-		wall.lookAt(1, 0, 0);
-		tile_x += far;
-		real_x = tile_x * block;
-		real_z = (tile_z + 0.5) * block;
-		available = walls_horizontal.add(tile_x,tile_y,tile_z);
-	}
-
-	if (!available)
-		return false;
-	wall.position.set(real_x, real_y, real_z);
-
 	return wall;
 };
 

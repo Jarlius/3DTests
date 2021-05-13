@@ -92,15 +92,6 @@ class BuildWall extends BuildBase {
 		this.grid = grid;
 		scene.add( grid );
 	}
-	// always overridden, left to show next step TODO remove
-	clickLeftUp(x,y,camhandler,start,scene) {
-		const end = camhandler.getPlaneClick(x,y,ObjectMaker.getLevel());
-		const newtile = ObjectMaker.makeWall(end.x, end.z);
-		if (newtile) {
-//			camhandler.getXclick(x,y,newtile.position.x);
-			scene.add( newtile );
-		}
-	}
 	pressB(scene) {
 		scene.remove(this.grid);
 		return new BuildFloor(scene);
