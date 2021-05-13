@@ -71,6 +71,13 @@ exports.makeZGrid = () => {
 	return grid;
 };
 
+function makeTile() {
+	// TODO need to learn matrix transforms to move the tile
+	const material = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
+	material.side = THREE.DoubleSide;
+	return new THREE.Mesh( plane_geometry, material );
+}
+
 exports.makeTile = (x,z, start) => { // TODO use startcooords (third arg) to create multiple tiles
 	const start_x = Math.floor(start.x/block);
 	const start_z = Math.floor(start.z/block);
@@ -89,10 +96,7 @@ exports.makeTile = (x,z, start) => { // TODO use startcooords (third arg) to cre
 			const real_x = (i+0.5) * block;
 			const real_z = (j+0.5) * block;
 
-			// TODO need to learn matrix transforms to move the tile
-			const material = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
-			material.side = THREE.DoubleSide;
-			const tile = new THREE.Mesh( plane_geometry, material );
+			const tile = makeTile();
 			tile.lookAt( 0, 1, 0 );
 			tile.position.set( real_x, editlevel, real_z );
 			tile.onClick = () => {
@@ -150,9 +154,7 @@ exports.makeXWall = (x,y) => {
 }
 
 exports.makeZWall = (x,y) => {
-	const material = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
-	material.side = THREE.DoubleSide;
-	const wall = new THREE.Mesh( plane_geometry, material );
+	const wall = makeTile();
 	wall.onClick = () => {
 		console.log('wall');
 	};
