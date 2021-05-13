@@ -141,9 +141,22 @@ exports.makeXWall = (x,y) => {
 }
 
 exports.makeZWall = (x,y) => {
-	// nothing right now, just stop regular makeWall TODO do more
-	console.log('make Z wall');
-	console.log(x,y);
+	const material = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
+	material.side = THREE.DoubleSide;
+	const wall = new THREE.Mesh( plane_geometry, material );
+	wall.onClick = () => {
+		console.log('wall');
+	};
+
+	const tile_x = x - (x % block);
+	const tile_y = y - (y % block);
+	wall.position.set(
+		tile_x + (block/2 * Math.sign(x)),
+		tile_y + (block/2 * Math.sign(y)),
+		exports.getZLevel()
+	);
+
+	return wall;
 };
 
 exports.makeWall = (x,z) => {
