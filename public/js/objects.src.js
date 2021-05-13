@@ -17,6 +17,7 @@ const tiles = new Matrix3D();
 const walls_horizontal = new Matrix3D();
 const walls_vertical = new Matrix3D();
 
+const walls_x = new Matrix3D();
 const walls_z = new Matrix3D();
 
 exports.setColor = (objects,col) => {
@@ -150,15 +151,24 @@ function getVerticalWallCoords(x,y) {
 }
 
 exports.makeXWall = (x,y) => {
-	// nothing right now, just stop regular makeWall TODO do more
-	console.log('make X wall');
-	console.log(x,y);
+	const wall = makeTile();
+	wall.lookAt(1, 0, 0);
+	wall.onClick = () => {
+		console.log('X wall');
+	};
+
+	const coords = getVerticalWallCoords(x,y);
+	if ( !walls_x.add( xlevel, coords.y, coords.x ) )
+		return false;
+	console.log('adding');
+	wall.position.set( xlevel, coords.y, coords.x );
+	return wall;
 }
 
 exports.makeZWall = (x,y) => {
 	const wall = makeTile();
 	wall.onClick = () => {
-		console.log('wall');
+		console.log('Z wall');
 	};
 
 	const coords = getVerticalWallCoords(x,y);
