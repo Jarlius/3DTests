@@ -134,6 +134,15 @@ exports.findTiles = (start,end) => {
 	return arr;
 };
 
+function getVerticalWallCoords(x,y) {
+	const tile_x = x - (x % block);
+	const tile_y = y - (y % block);
+	return {
+		x: tile_x + (block/2 * Math.sign(x)),
+		y: tile_y + (block/2 * Math.sign(y))
+	}
+}
+
 exports.makeXWall = (x,y) => {
 	// nothing right now, just stop regular makeWall TODO do more
 	console.log('make X wall');
@@ -148,13 +157,8 @@ exports.makeZWall = (x,y) => {
 		console.log('wall');
 	};
 
-	const tile_x = x - (x % block);
-	const tile_y = y - (y % block);
-	wall.position.set(
-		tile_x + (block/2 * Math.sign(x)),
-		tile_y + (block/2 * Math.sign(y)),
-		exports.getZLevel()
-	);
+	const coords = getVerticalWallCoords(x,y);
+	wall.position.set( coords.x, coords.y, exports.getZLevel() );
 
 	return wall;
 };
