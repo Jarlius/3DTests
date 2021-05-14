@@ -160,4 +160,6 @@ class BuildZWall extends BuildWall {
 	}
 }
 
-exports.getStartingState = Normal;
+exports.getStartingState = () => {
+	return new Normal();
+};

@@ -41,7 +41,7 @@ function Manager(width, height, parent) {
 		});
 */	};
 
-	var state = new States.getStartingState();
+	var state = States.getStartingState();
 
 	this.clickLeftDown = (x,y) => {
 		// TODO determine orientation here already
