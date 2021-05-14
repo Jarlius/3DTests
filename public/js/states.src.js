@@ -3,8 +3,15 @@ const THREE = require('three');
 const ObjectMaker = require('./objects.src.js');
 const Raycaster = new THREE.Raycaster();
 
-class Normal {
+class State {
 	constructor() {
+		this.start = null;
+	}
+}
+
+class Normal extends State {
+	constructor() {
+		super();
 		this.lastclicked = [];
 	}
 	clickLeftDown(x,y,camhandler,width,height,scene) {
@@ -19,15 +26,16 @@ class Normal {
 		const intersects = Raycaster.intersectObjects( scene.children );
 					
 		if (intersects.length !== 0)
-			return intersects[0].object.position;
-		return null;
+			this.start = intersects[0].object.position;
+		else
+			this.start = null;
 	}
-	clickLeftUp(x,y,camhandler,start) {
-		if (start === null)
+	clickLeftUp(x,y,camhandler) {
+		if (this.start === null)
 			return;
-		const end = camhandler.getPlaneClick(x,y,start.y);
+		const end = camhandler.getPlaneClick(x,y,this.start.y);
 
-		this.lastclicked = ObjectMaker.findTiles(start,end);
+		this.lastclicked = ObjectMaker.findTiles(this.start,end);
 		// change color of last clicked object TODO do colors better
 		for (let i=0; i < this.lastclicked.length; i++) {
 			this.lastclicked[i].material.color.r = 1;
@@ -50,10 +58,7 @@ class Normal {
 	}
 }
 
-class BuildBase {
-	clickLeftDown(x,y,camhandler) {
-		return camhandler.getPlaneClick(x,y,ObjectMaker.getLevel());
-	}
+class BuildBase extends State {
 	pressV(scene) {
 		scene.remove(this.grid);
 		return new Normal();
@@ -66,9 +71,14 @@ class BuildFloor extends BuildBase {
 		this.grid = ObjectMaker.makeYGrid();
 		scene.add( this.grid );
 	};
-	clickLeftUp(x,y,camhandler,start,scene) {
+	clickLeftDown(x,y,camhandler) {
+		this.start = camhandler.getPlaneClick(x,y,ObjectMaker.getLevel());
+	}
+	clickLeftUp(x,y,camhandler,scene) {
+		if (this.start === null)
+			return;
 		const end = camhandler.getPlaneClick(x,y,ObjectMaker.getLevel());
-		const newtiles = ObjectMaker.makeTile(end.x, end.z, start);
+		const newtiles = ObjectMaker.makeTile(end.x, end.z, this.start);
 		for (let i=0; i < newtiles.length; i++)
 			scene.add( newtiles[i] );
 	}
@@ -106,7 +116,7 @@ class BuildXWall extends BuildWall {
 		console.log('x click');
 		camhandler.getXclick(x,y,ObjectMaker.getXLevel());
 	}
-	clickLeftUp(x,y,camhandler,start,scene) {
+	clickLeftUp(x,y,camhandler,scene) {
 		const end = camhandler.getXclick(x,y,ObjectMaker.getXLevel());
 		const newtile = ObjectMaker.makeXWall(end.z,end.y);
 		if (newtile)
@@ -132,7 +142,7 @@ class BuildZWall extends BuildWall {
 		console.log('z click');
 		camhandler.getZclick(x,y,ObjectMaker.getZLevel());
 	}
-	clickLeftUp(x,y,camhandler,start,scene) {
+	clickLeftUp(x,y,camhandler,scene) {
 		const end = camhandler.getZclick(x,y,ObjectMaker.getZLevel());
 		const newtile = ObjectMaker.makeZWall(end.x,end.y);
 		if (newtile)

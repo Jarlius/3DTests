@@ -41,17 +41,16 @@ function Manager(width, height, parent) {
 		});
 */	};
 
-	var start = null;
 	var state = new States.getStartingState();
 
 	this.clickLeftDown = (x,y) => {
 		// TODO determine orientation here already
-		start = state.clickLeftDown(x,y,camhandler,width,height,scene);
+		state.clickLeftDown(x,y,camhandler,width,height,scene);
 		render();
 	};
 	this.clickLeftUp = (x,y) => {
 		// TODO different end y level depending on build
-		state.clickLeftUp(x,y,camhandler,start,scene);
+		state.clickLeftUp(x,y,camhandler,scene);
 		render();
 	};
 
