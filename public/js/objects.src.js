@@ -157,47 +157,35 @@ function makeWall(start,end,func) {
 	}
 }
 
-exports.makeXWall = (start, end) => {
-	const wall = makeTile();
-	wall.lookAt(1, 0, 0);
-	wall.onClick = () => {
-		console.log('X wall');
-	};
-
+exports.makeXWall = (start, end, scene) => {
 	const start_coords = getVerticalWallCoords(start.z,start.y);
 	const end_coords = getVerticalWallCoords(end.z,end.y);
 	makeWall(start_coords,end_coords, (x,y) => {
-		if (walls_x.has( xlevel, y, x )) {
-			console.log('AMOGUS');
+		if (walls_x.add( xlevel, y, x )) {
+			const wall = makeTile();
+			wall.lookAt(1, 0, 0);
+			wall.onClick = () => {
+				console.log('X wall');
+			};
+			wall.position.set( xlevel, y, x );
+			scene.add(wall);
 		}
 	});
-
-	if ( !walls_x.add( xlevel, end_coords.y, end_coords.x ) )
-		return false;
-
-	wall.position.set( xlevel, end_coords.y, end_coords.x );
-	return wall;
 }
 
-exports.makeZWall = (start,end) => {
-	const wall = makeTile();
-	wall.onClick = () => {
-		console.log('Z wall');
-	};
-
+exports.makeZWall = (start, end, scene) => {
 	const start_coords = getVerticalWallCoords(start.x,start.y);
 	const end_coords = getVerticalWallCoords(end.x,end.y);
 	makeWall(start_coords,end_coords, (x,y) => {
-		if (walls_z.has( x, y, zlevel )) {
-			console.log('AMOGUS');
+		if (walls_z.add( x, y, zlevel )) {
+			const wall = makeTile();
+			wall.onClick = () => {
+				console.log('Z wall');
+			};
+			wall.position.set( x, y, zlevel );
+			scene.add(wall);
 		}
 	});
-
-	if ( !walls_z.add( end_coords.x, end_coords.y, zlevel ) )
-		return false;
-	
-	wall.position.set( end_coords.x, end_coords.y, zlevel );
-	return wall;
 };
 
 exports.makeRotatingCube = () => {

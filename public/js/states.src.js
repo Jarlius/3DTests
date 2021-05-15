@@ -118,9 +118,7 @@ class BuildXWall extends BuildWall {
 	}
 	clickLeftUp(x,y,camhandler,scene) {
 		const end = camhandler.getXclick(x,y,ObjectMaker.getXLevel());
-		const newtile = ObjectMaker.makeXWall(this.start,end);
-		if (newtile)
-			scene.add(newtile);
+		ObjectMaker.makeXWall(this.start,end,scene);
 	}
 	pressN(scene) {
 		scene.remove(this.grid);
@@ -146,9 +144,7 @@ class BuildZWall extends BuildWall {
 		if (this.start === null)
 			return;
 		const end = camhandler.getZclick(x,y,ObjectMaker.getZLevel());
-		const newtile = ObjectMaker.makeZWall(this.start,end);
-		if (newtile)
-			scene.add(newtile);
+		ObjectMaker.makeZWall(this.start,end,scene);
 	}
 	pressN(scene) {
 		scene.remove(this.grid);
