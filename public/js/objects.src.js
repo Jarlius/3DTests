@@ -147,32 +147,34 @@ function getVerticalWallCoords(x,y) {
 	}
 }
 
-exports.makeXWall = (x,y) => {
+exports.makeXWall = (start, end) => {
 	const wall = makeTile();
 	wall.lookAt(1, 0, 0);
 	wall.onClick = () => {
 		console.log('X wall');
 	};
 
-	const coords = getVerticalWallCoords(x,y);
-	if ( !walls_x.add( xlevel, coords.y, coords.x ) )
+	const start_coords = getVerticalWallCoords(start.z,start.y);
+	const end_coords = getVerticalWallCoords(end.z,end.y);
+	if ( !walls_x.add( xlevel, end_coords.y, end_coords.x ) )
 		return false;
 	console.log('adding');
-	wall.position.set( xlevel, coords.y, coords.x );
+	wall.position.set( xlevel, end_coords.y, end_coords.x );
 	return wall;
 }
 
-exports.makeZWall = (x,y) => {
+exports.makeZWall = (start,end) => {
 	const wall = makeTile();
 	wall.onClick = () => {
 		console.log('Z wall');
 	};
 
-	const coords = getVerticalWallCoords(x,y);
-	if ( !walls_z.add( coords.x, coords.y, zlevel ) )
+	const start_coords = getVerticalWallCoords(start.x,start.y);
+	const end_coords = getVerticalWallCoords(end.x,end.y);
+	if ( !walls_z.add( end_coords.x, end_coords.y, zlevel ) )
 		return false;
 	
-	wall.position.set( coords.x, coords.y, zlevel );
+	wall.position.set( end_coords.x, end_coords.y, zlevel );
 	return wall;
 };
 

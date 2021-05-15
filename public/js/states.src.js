@@ -114,11 +114,11 @@ class BuildXWall extends BuildWall {
 	}
 	clickLeftDown(x,y,camhandler) {
 		console.log('x click');
-		camhandler.getXclick(x,y,ObjectMaker.getXLevel());
+		this.start = camhandler.getXclick(x,y,ObjectMaker.getXLevel());
 	}
 	clickLeftUp(x,y,camhandler,scene) {
 		const end = camhandler.getXclick(x,y,ObjectMaker.getXLevel());
-		const newtile = ObjectMaker.makeXWall(end.z,end.y);
+		const newtile = ObjectMaker.makeXWall(this.start,end);
 		if (newtile)
 			scene.add(newtile);
 	}
@@ -140,11 +140,13 @@ class BuildZWall extends BuildWall {
 	}
 	clickLeftDown(x,y,camhandler) {
 		console.log('z click');
-		camhandler.getZclick(x,y,ObjectMaker.getZLevel());
+		this.start = camhandler.getZclick(x,y,ObjectMaker.getZLevel());
 	}
 	clickLeftUp(x,y,camhandler,scene) {
+		if (this.start === null)
+			return;
 		const end = camhandler.getZclick(x,y,ObjectMaker.getZLevel());
-		const newtile = ObjectMaker.makeZWall(end.x,end.y);
+		const newtile = ObjectMaker.makeZWall(this.start,end);
 		if (newtile)
 			scene.add(newtile);
 	}
