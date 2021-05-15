@@ -71,11 +71,13 @@ exports.makeZGrid = () => {
 	return grid;
 };
 
-function makeTile() {
+function makeTile(tilekind) {
 	// TODO need to learn matrix transforms to move the tile
 	const material = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
 	material.side = THREE.DoubleSide;
-	return new THREE.Mesh( plane_geometry, material );
+	const tile = new THREE.Mesh( plane_geometry, material );
+	tile.tilekind = tilekind;
+	return tile;
 }
 
 exports.makeTile = (x,z, start) => { // TODO use startcooords (third arg) to create multiple tiles
@@ -96,7 +98,7 @@ exports.makeTile = (x,z, start) => { // TODO use startcooords (third arg) to cre
 			const real_x = (i+0.5) * block;
 			const real_z = (j+0.5) * block;
 
-			const tile = makeTile();
+			const tile = makeTile('floor');
 			tile.lookAt( 0, 1, 0 );
 			tile.position.set( real_x, editlevel, real_z );
 			tile.onClick = () => {
@@ -162,7 +164,7 @@ exports.makeXWall = (start, end, scene) => {
 	const end_coords = getVerticalWallCoords(end.z,end.y);
 	makeWall(start_coords,end_coords, (x,y) => {
 		if (walls_x.add( xlevel, y, x )) {
-			const wall = makeTile();
+			const wall = makeTile('xwall');
 			wall.lookAt(1, 0, 0);
 			wall.onClick = () => {
 				console.log('X wall');
@@ -178,7 +180,7 @@ exports.makeZWall = (start, end, scene) => {
 	const end_coords = getVerticalWallCoords(end.x,end.y);
 	makeWall(start_coords,end_coords, (x,y) => {
 		if (walls_z.add( x, y, zlevel )) {
-			const wall = makeTile();
+			const wall = makeTile('zwall');
 			wall.onClick = () => {
 				console.log('Z wall');
 			};

@@ -25,9 +25,11 @@ class Normal extends State {
 		Raycaster.setFromCamera( vector, camhandler.getCamera() );
 		const intersects = Raycaster.intersectObjects( scene.children );
 					
-		if (intersects.length !== 0)
-			this.start = intersects[0].object.position;
-		else
+		if (intersects.length !== 0) {
+			const obj = intersects[0].object;
+			this.start = obj.position;
+			console.log(obj.tilekind);
+		} else
 			this.start = null;
 	}
 	clickLeftUp(x,y,camhandler) {
