@@ -117,6 +117,8 @@ class BuildXWall extends BuildWall {
 		this.start = camhandler.getXclick(x,y,ObjectMaker.getXLevel());
 	}
 	clickLeftUp(x,y,camhandler,scene) {
+		if (this.start === null)
+			return;
 		const end = camhandler.getXclick(x,y,ObjectMaker.getXLevel());
 		ObjectMaker.makeXWall(this.start,end,scene);
 	}
