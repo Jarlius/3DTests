@@ -147,12 +147,12 @@ function getVerticalWallCoords(x,y) {
 	}
 }
 
-function makeWall(start,end) {
+function makeWall(start,end,func) {
 	const x_max = Math.max(start.x,end.x);
 	const y_max = Math.max(start.y,end.y);
 	for (let i = Math.min(start.x,end.x); i <= x_max; i += block) {
 		for (let j = Math.min(start.y,end.y); j <= y_max; j += block) {
-			console.log(i,j);
+			func(i,j);
 		}
 	}
 }
@@ -166,7 +166,11 @@ exports.makeXWall = (start, end) => {
 
 	const start_coords = getVerticalWallCoords(start.z,start.y);
 	const end_coords = getVerticalWallCoords(end.z,end.y);
-	makeWall(start_coords,end_coords);
+	makeWall(start_coords,end_coords, (x,y) => {
+		if (walls_x.has( xlevel, y, x )) {
+			console.log('AMOGUS');
+		}
+	});
 
 	if ( !walls_x.add( xlevel, end_coords.y, end_coords.x ) )
 		return false;
@@ -183,7 +187,11 @@ exports.makeZWall = (start,end) => {
 
 	const start_coords = getVerticalWallCoords(start.x,start.y);
 	const end_coords = getVerticalWallCoords(end.x,end.y);
-	makeWall(start_coords,end_coords);
+	makeWall(start_coords,end_coords, (x,y) => {
+		if (walls_z.has( x, y, zlevel )) {
+			console.log('AMOGUS');
+		}
+	});
 
 	if ( !walls_z.add( end_coords.x, end_coords.y, zlevel ) )
 		return false;
