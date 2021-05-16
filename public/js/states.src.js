@@ -44,7 +44,7 @@ class Normal extends State {
 		if (this.start === null)
 			return;
 		const clickedobj = raycast(x,y,camhandler,scene,width,height);
-		if (this.startkind !== clickedobj.tilekind)
+		if (clickedobj === null || this.startkind !== clickedobj.tilekind)
 			return;
 		const end = clickedobj.position;
 
