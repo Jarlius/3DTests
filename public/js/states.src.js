@@ -48,7 +48,7 @@ class Normal extends State {
 			return;
 		const end = clickedobj.position;
 
-		this.lastclicked = ObjectMaker.findTiles(this.start,end);
+		this.lastclicked = ObjectMaker.findTiles(this.start,end,this.startkind);
 		// change color of last clicked object TODO do colors better
 		for (let i=0; i < this.lastclicked.length; i++) {
 			this.lastclicked[i].material.color.r = 1;

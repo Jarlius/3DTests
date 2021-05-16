@@ -121,7 +121,22 @@ exports.removeTile = pos => {
 //	walls_vertical.del(tile_x, tile_y, tile_z);
 };
 
-exports.findTiles = (start,end) => {
+exports.findTiles = (start,end,kind) => {
+	var tiles;
+	switch (kind) {
+	case 'floor':
+		tiles = floor;
+		break;
+	case 'xwall':
+		tiles = walls_x;
+		break;
+	case 'zwall':
+		tiles = walls_z;
+		break;
+	default:
+		console.warn('bad tile kind');
+	}
+
 	const start_x = Math.floor(start.x/block);
 	const start_y = Math.floor(start.y/block);
 	const start_z = Math.floor(start.z/block);
@@ -132,7 +147,7 @@ exports.findTiles = (start,end) => {
 
 	for (let i = Math.min(start_x,end_x); i <= Math.max(start_x,end_x); i++)
 		for (let j = Math.min(start_z,end_z); j <= Math.max(start_z,end_z); j++) {
-			const tile = floor.get(i,start_y,j);
+			const tile = tiles.get(i,start_y,j);
 			if (tile)
 				arr.push(tile);
 		}
