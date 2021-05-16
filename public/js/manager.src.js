@@ -50,7 +50,7 @@ function Manager(width, height, parent) {
 	};
 	this.clickLeftUp = (x,y) => {
 		// TODO different end y level depending on build
-		state.clickLeftUp(x,y,camhandler,scene);
+		state.clickLeftUp(x,y,camhandler,scene,width,height);
 		render();
 	};
 

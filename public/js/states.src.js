@@ -39,10 +39,10 @@ class Normal extends State {
 		} else
 			this.start = null;
 	}
-	clickLeftUp(x,y,camhandler) {
+	clickLeftUp(x,y,camhandler,scene,width,height) {
 		if (this.start === null)
 			return;
-		const end = camhandler.getPlaneClick(x,y,this.start.y);
+		const end = raycast(x,y,camhandler,scene,width,height).position;
 
 		this.lastclicked = ObjectMaker.findTiles(this.start,end);
 		// change color of last clicked object TODO do colors better
