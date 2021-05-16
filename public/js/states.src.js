@@ -9,7 +9,7 @@ class State {
 	}
 }
 
-function raycast(x,y,width,height,camhandler,scene) {
+function raycast(x,y,camhandler,scene,width,height) {
 	const vector = new THREE.Vector2(
 //		(x - offsetleft) / width * 2 - 1,
 //		- (y - offsettop) / height * 2 + 1
@@ -29,9 +29,9 @@ class Normal extends State {
 		super();
 		this.lastclicked = [];
 	}
-	clickLeftDown(x,y,camhandler,width,height,scene) {
+	clickLeftDown(x,y,camhandler,scene,width,height) {
 		ObjectMaker.setColor(this.lastclicked,0);
-		const clickedobj = raycast(x,y,width,height,camhandler,scene);
+		const clickedobj = raycast(x,y,camhandler,scene,width,height);
 		
 		if (clickedobj !== null) {
 			this.start = clickedobj.position;

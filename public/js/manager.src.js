@@ -45,7 +45,7 @@ function Manager(width, height, parent) {
 
 	this.clickLeftDown = (x,y) => {
 		// TODO determine orientation here already
-		state.clickLeftDown(x,y,camhandler,width,height,scene);
+		state.clickLeftDown(x,y,camhandler,scene,width,height);
 		render();
 	};
 	this.clickLeftUp = (x,y) => {
