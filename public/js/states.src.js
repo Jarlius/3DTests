@@ -9,6 +9,21 @@ class State {
 	}
 }
 
+function raycast(x,y,width,height,camhandler,scene) {
+	const vector = new THREE.Vector2(
+//		(x - offsetleft) / width * 2 - 1,
+//		- (y - offsettop) / height * 2 + 1
+		x / width * 2 - 1,
+		- y / height * 2 + 1
+	);
+	Raycaster.setFromCamera( vector, camhandler.getCamera() );
+	const intersects = Raycaster.intersectObjects( scene.children );
+	if (intersects.length !== 0)
+		return intersects[0].object;
+	else
+		return null;
+}
+
 class Normal extends State {
 	constructor() {
 		super();
@@ -16,19 +31,11 @@ class Normal extends State {
 	}
 	clickLeftDown(x,y,camhandler,width,height,scene) {
 		ObjectMaker.setColor(this.lastclicked,0);
-		const vector = new THREE.Vector2(
-//			(x - offsetleft) / width * 2 - 1,
-//			- (y - offsettop) / height * 2 + 1
-			x / width * 2 - 1,
-			- y / height * 2 + 1
-		);
-		Raycaster.setFromCamera( vector, camhandler.getCamera() );
-		const intersects = Raycaster.intersectObjects( scene.children );
-					
-		if (intersects.length !== 0) {
-			const obj = intersects[0].object;
-			this.start = obj.position;
-			console.log(obj.tilekind);
+		const clickedobj = raycast(x,y,width,height,camhandler,scene);
+		
+		if (clickedobj !== null) {
+			this.start = clickedobj.position;
+			console.log(clickedobj.tilekind);
 		} else
 			this.start = null;
 	}
