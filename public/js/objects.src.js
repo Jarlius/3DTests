@@ -13,7 +13,7 @@ const box_geometry = new THREE.BoxGeometry();
 const plane_geometry = new THREE.PlaneGeometry( tile_size, tile_size );
 const wire_geometry = new THREE.WireframeGeometry( box_geometry );
 
-const tiles = new Matrix3D();
+const floor = new Matrix3D();
 const walls_x = new Matrix3D();
 const walls_z = new Matrix3D();
 
@@ -92,7 +92,7 @@ exports.makeTile = (x,z, start) => { // TODO use startcooords (third arg) to cre
 
 	for (let i = Math.min(start_x,tile_x); i <= Math.max(start_x,tile_x); i++)
 		for (let j = Math.min(start_z,tile_z); j <= Math.max(start_z,tile_z); j++) {
-			if (tiles.has(i,tile_y,j))
+			if (floor.has(i,tile_y,j))
 				continue;
 
 			const real_x = (i+0.5) * block;
@@ -105,7 +105,7 @@ exports.makeTile = (x,z, start) => { // TODO use startcooords (third arg) to cre
 				console.log('floor');
 			};
 
-			tiles.add(i,tile_y,j,tile);
+			floor.add(i,tile_y,j,tile);
 			arr.push(tile);
 		}
 
@@ -116,7 +116,7 @@ exports.removeTile = pos => {
 	const tile_x = Math.floor(pos.x/block);
 	const tile_y = Math.floor(pos.y/block);
 	const tile_z = Math.floor(pos.z/block);
-	tiles.del(tile_x, tile_y, tile_z);
+	floor.del(tile_x, tile_y, tile_z);
 //	walls_horizontal.del(tile_x, tile_y, tile_z);
 //	walls_vertical.del(tile_x, tile_y, tile_z);
 };
@@ -132,7 +132,7 @@ exports.findTiles = (start,end) => {
 
 	for (let i = Math.min(start_x,end_x); i <= Math.max(start_x,end_x); i++)
 		for (let j = Math.min(start_z,end_z); j <= Math.max(start_z,end_z); j++) {
-			const tile = tiles.get(i,start_y,j);
+			const tile = floor.get(i,start_y,j);
 			if (tile)
 				arr.push(tile);
 		}
