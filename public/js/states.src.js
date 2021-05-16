@@ -27,6 +27,7 @@ function raycast(x,y,camhandler,scene,width,height) {
 class Normal extends State {
 	constructor() {
 		super();
+		this.startkind = null;
 		this.lastclicked = [];
 	}
 	clickLeftDown(x,y,camhandler,scene,width,height) {
@@ -35,14 +36,17 @@ class Normal extends State {
 		
 		if (clickedobj !== null) {
 			this.start = clickedobj.position;
-			console.log(clickedobj.tilekind);
+			this.startkind = clickedobj.tilekind;
 		} else
 			this.start = null;
 	}
 	clickLeftUp(x,y,camhandler,scene,width,height) {
 		if (this.start === null)
 			return;
-		const end = raycast(x,y,camhandler,scene,width,height).position;
+		const clickedobj = raycast(x,y,camhandler,scene,width,height);
+		if (this.startkind !== clickedobj.tilekind)
+			return;
+		const end = clickedobj.position;
 
 		this.lastclicked = ObjectMaker.findTiles(this.start,end);
 		// change color of last clicked object TODO do colors better
