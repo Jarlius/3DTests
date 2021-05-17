@@ -123,25 +123,63 @@ exports.removeTile = pos => {
 
 exports.findTiles = (start,end,kind) => {
 	var tiles;
+	var start_x;
+	var start_y;
+	var end_x;
+	var end_y;
+	var level;
 	switch (kind) {
 	case 'floor':
 		tiles = floor;
+		start_x = start.x;
+		start_y = start.z;
+		end_x = end.x;
+		end_y = end.z;
+		if (start.y != end.y)
+			return [];
+		level = start.y;
 		break;
 	case 'xwall':
 		tiles = walls_x;
+		start_x = start.z;
+		start_y = start.y;
+		end_x = end.z;
+		end_y = end.y;
+		if (start.z != end.x)
+			return [];
+		level = start.x;
 		break;
 	case 'zwall':
 		tiles = walls_z;
+		start_x = start.x;
+		start_y = start.y;
+		end_x = end.x;
+		end_y = end.y;
+		if (start.z != end.z)
+			return [];
+		level = start.z;
 		break;
 	default:
 		console.warn('bad tile kind');
+		return [];
 	}
 
-	const start_x = Math.floor(start.x/block);
-	const start_y = Math.floor(start.y/block);
-	const start_z = Math.floor(start.z/block);
-	const end_x = Math.floor(end.x/block);
-	const end_z = Math.floor(end.z/block);
+	console.log('better');
+	console.log('start:',start_x,start_y);
+	console.log('end:',end_x,end_y);
+
+	start_x = Math.floor(start.x/block);
+	start_y = Math.floor(start.y/block);
+	start_z = Math.floor(start.z/block);
+	end_x = Math.floor(end.x/block);
+	end_z = Math.floor(end.z/block);
+	
+	console.log('gamla');
+	console.log('start:',start.x,start.z);
+	console.log('end:',end.x,end.z);
+	console.log('till');
+	console.log('start:',start_x,start_z);
+	console.log('end:',end_x,end_z);
 
 	var arr = [];
 
