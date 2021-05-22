@@ -131,13 +131,13 @@ exports.findTiles = (start,end,kind) => {
 	switch (kind) {
 	case 'floor':
 		tiles = floor;
-		start_x = start.x;
-		start_y = start.z;
-		end_x = end.x;
-		end_y = end.z;
+		start_x = Math.floor(start.x/block);
+		start_y = Math.floor(start.z/block);
+		end_x = Math.floor(end.x/block);
+		end_y = Math.floor(end.z/block);
 		if (start.y != end.y)
 			return [];
-		level = start.y;
+		level = Math.floor(start.y/block);
 		break;
 	case 'xwall':
 		tiles = walls_x;
@@ -164,28 +164,23 @@ exports.findTiles = (start,end,kind) => {
 		return [];
 	}
 
-	console.log('better');
-	console.log('start:',start_x,start_y);
-	console.log('end:',end_x,end_y);
-
-	start_x = Math.floor(start.x/block);
-	start_y = Math.floor(start.y/block);
-	start_z = Math.floor(start.z/block);
-	end_x = Math.floor(end.x/block);
-	end_z = Math.floor(end.z/block);
-	
-	console.log('gamla');
-	console.log('start:',start.x,start.z);
-	console.log('end:',end.x,end.z);
-	console.log('till');
-	console.log('start:',start_x,start_z);
-	console.log('end:',end_x,end_z);
-
 	var arr = [];
 
 	for (let i = Math.min(start_x,end_x); i <= Math.max(start_x,end_x); i++)
-		for (let j = Math.min(start_z,end_z); j <= Math.max(start_z,end_z); j++) {
-			const tile = tiles.get(i,start_y,j);
+		for (let j = Math.min(start_y,end_y); j <= Math.max(start_y,end_y); j++) {
+			console.log(i,level,j);
+			var tile;
+			switch (kind) {
+			case 'floor':
+				tile = tiles.get(i,level,j);
+				break;
+			case 'xwall':
+				tile = tiles.get(level,j,i);
+				break;
+			case 'zwall':
+				tile = tiles.get(i,j,level);
+				break;
+			}
 			if (tile)
 				arr.push(tile);
 		}
