@@ -145,7 +145,7 @@ exports.findTiles = (start,end,kind) => {
 		start_y = start.y;
 		end_x = end.z;
 		end_y = end.y;
-		if (start.z != end.x)
+		if (start.x != end.x)
 			return [];
 		level = start.x;
 		break;
@@ -168,7 +168,6 @@ exports.findTiles = (start,end,kind) => {
 
 	for (let i = Math.min(start_x,end_x); i <= Math.max(start_x,end_x); i++)
 		for (let j = Math.min(start_y,end_y); j <= Math.max(start_y,end_y); j++) {
-			console.log(i,level,j);
 			var tile;
 			switch (kind) {
 			case 'floor':
@@ -211,13 +210,14 @@ exports.makeXWall = (start, end, scene) => {
 	const start_coords = getVerticalWallCoords(start.z,start.y);
 	const end_coords = getVerticalWallCoords(end.z,end.y);
 	makeWall(start_coords,end_coords, (x,y) => {
-		if (walls_x.add( xlevel, y, x )) {
+		if (!walls_x.has( xlevel, y, x )) {
 			const wall = makeTile('xwall');
 			wall.lookAt(1, 0, 0);
 			wall.onClick = () => {
 				console.log('X wall');
 			};
 			wall.position.set( xlevel, y, x );
+			walls_x.add(xlevel,y,x,wall);
 			scene.add(wall);
 		}
 	});
@@ -227,12 +227,13 @@ exports.makeZWall = (start, end, scene) => {
 	const start_coords = getVerticalWallCoords(start.x,start.y);
 	const end_coords = getVerticalWallCoords(end.x,end.y);
 	makeWall(start_coords,end_coords, (x,y) => {
-		if (walls_z.add( x, y, zlevel )) {
+		if (!walls_z.has( x, y, zlevel )) {
 			const wall = makeTile('zwall');
 			wall.onClick = () => {
 				console.log('Z wall');
 			};
 			wall.position.set( x, y, zlevel );
+			walls_z.add(x,y,zlevel,wall);
 			scene.add(wall);
 		}
 	});
