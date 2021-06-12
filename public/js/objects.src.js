@@ -71,6 +71,14 @@ exports.makeZGrid = () => {
 	return grid;
 };
 
+function planeCoordToIndex(coord) {
+	return {
+		x: Math.floor(coord.x/block),
+		y: Math.floor(coord.y/block),
+		z: Math.floor(coord.z/block)
+	};
+}
+
 function makeTile(tilekind) {
 	// TODO need to learn matrix transforms to move the tile
 	const material = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
@@ -113,10 +121,8 @@ exports.makeTile = (x,z, start) => { // TODO use startcooords (third arg) to cre
 };
 
 exports.removeTile = pos => {
-	const tile_x = Math.floor(pos.x/block);
-	const tile_y = Math.floor(pos.y/block);
-	const tile_z = Math.floor(pos.z/block);
-	floor.del(tile_x, tile_y, tile_z);
+	const tile = planeCoordToIndex(pos);
+	floor.del(tile.x, tile.y, tile.z);
 //	walls_horizontal.del(tile_x, tile_y, tile_z);
 //	walls_vertical.del(tile_x, tile_y, tile_z);
 };
