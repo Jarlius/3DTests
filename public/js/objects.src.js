@@ -153,7 +153,7 @@ exports.findTiles = (start,end,kind) => {
 		end_y = Math.floor(end.y/block);
 		if (start.x != end.x)
 			return [];
-		level = Math.floor(start.x);
+		level = Math.floor(start.x/block);
 		break;
 	case 'zwall':
 		tiles = walls_z;
