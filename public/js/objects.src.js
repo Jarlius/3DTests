@@ -147,23 +147,23 @@ exports.findTiles = (start,end,kind) => {
 		break;
 	case 'xwall':
 		tiles = walls_x;
-		start_x = start.z;
-		start_y = start.y;
-		end_x = end.z;
-		end_y = end.y;
+		start_x = Math.floor(start.z/block);
+		start_y = Math.floor(start.y/block);
+		end_x = Math.floor(end.z/block);
+		end_y = Math.floor(end.y/block);
 		if (start.x != end.x)
 			return [];
-		level = start.x;
+		level = Math.floor(start.x);
 		break;
 	case 'zwall':
 		tiles = walls_z;
-		start_x = start.x;
-		start_y = start.y;
-		end_x = end.x;
-		end_y = end.y;
+		start_x = Math.floor(start.x/block);
+		start_y = Math.floor(start.y/block);
+		end_x = Math.floor(end.x/block);
+		end_y = Math.floor(end.y/block);
 		if (start.z != end.z)
 			return [];
-		level = start.z;
+		level = Math.floor(start.z/block);
 		break;
 	default:
 		console.warn('bad tile kind');
@@ -223,7 +223,12 @@ exports.makeXWall = (start, end, scene) => {
 				console.log('X wall');
 			};
 			wall.position.set( xlevel, y, x );
-			walls_x.add(xlevel,y,x,wall);
+			walls_x.add(
+				Math.floor(xlevel/block),
+				Math.floor(y/block),
+				Math.floor(x/block),
+				wall
+			);
 			scene.add(wall);
 		}
 	});
@@ -239,7 +244,12 @@ exports.makeZWall = (start, end, scene) => {
 				console.log('Z wall');
 			};
 			wall.position.set( x, y, zlevel );
-			walls_z.add(x,y,zlevel,wall);
+			walls_z.add(
+				Math.floor(x/block),
+				Math.floor(y/block),
+				Math.floor(zlevel/block),
+				wall
+			);
 			scene.add(wall);
 		}
 	});
