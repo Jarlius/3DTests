@@ -123,8 +123,8 @@ exports.makeTile = (x,z, start) => { // TODO use startcooords (third arg) to cre
 exports.removeTile = pos => {
 	const tile = planeCoordToIndex(pos);
 	floor.del(tile.x, tile.y, tile.z);
-//	walls_horizontal.del(tile_x, tile_y, tile_z);
-//	walls_vertical.del(tile_x, tile_y, tile_z);
+	walls_x.del(tile.x, tile.y, tile.z);
+	walls_z.del(tile.x, tile.y, tile.z);
 };
 
 exports.findTiles = (start,end,kind) => {
