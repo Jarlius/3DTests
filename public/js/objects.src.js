@@ -128,15 +128,14 @@ exports.removeTile = pos => {
 };
 
 exports.findTiles = (start,end,kind) => {
-	var tiles;
 	var start_x;
 	var start_y;
 	var end_x;
 	var end_y;
 	var level;
+	var addTile;
 	switch (kind) {
 	case 'floor':
-		tiles = floor;
 		start_x = Math.floor(start.x/block);
 		start_y = Math.floor(start.z/block);
 		end_x = Math.floor(end.x/block);
@@ -144,9 +143,9 @@ exports.findTiles = (start,end,kind) => {
 		if (start.y != end.y)
 			return [];
 		level = Math.floor(start.y/block);
+		addTile = (x,y) => floor.get(x,level,y);
 		break;
 	case 'xwall':
-		tiles = walls_x;
 		start_x = Math.floor(start.z/block);
 		start_y = Math.floor(start.y/block);
 		end_x = Math.floor(end.z/block);
@@ -154,9 +153,9 @@ exports.findTiles = (start,end,kind) => {
 		if (start.x != end.x)
 			return [];
 		level = Math.floor(start.x/block);
+		addTile = (x,y) => walls_x.get(level,y,x);
 		break;
 	case 'zwall':
-		tiles = walls_z;
 		start_x = Math.floor(start.x/block);
 		start_y = Math.floor(start.y/block);
 		end_x = Math.floor(end.x/block);
@@ -164,6 +163,7 @@ exports.findTiles = (start,end,kind) => {
 		if (start.z != end.z)
 			return [];
 		level = Math.floor(start.z/block);
+		addTile = (x,y) => walls_z.get(x,y,level);
 		break;
 	default:
 		console.warn('bad tile kind');
@@ -172,23 +172,13 @@ exports.findTiles = (start,end,kind) => {
 
 	var arr = [];
 
-	for (let i = Math.min(start_x,end_x); i <= Math.max(start_x,end_x); i++)
+	for (let i = Math.min(start_x,end_x); i <= Math.max(start_x,end_x); i++) {
 		for (let j = Math.min(start_y,end_y); j <= Math.max(start_y,end_y); j++) {
-			var tile;
-			switch (kind) {
-			case 'floor':
-				tile = tiles.get(i,level,j);
-				break;
-			case 'xwall':
-				tile = tiles.get(level,j,i);
-				break;
-			case 'zwall':
-				tile = tiles.get(i,j,level);
-				break;
-			}
+			let tile = addTile(i,j);
 			if (tile)
 				arr.push(tile);
 		}
+	}
 	
 	return arr;
 };
