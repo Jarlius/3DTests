@@ -65,7 +65,7 @@ class Normal extends State {
 			return;
 		for (let i=0; i < this.lastclicked.length; i++) {
 			scene.remove( this.lastclicked[i] );
-			ObjectMaker.removeTile( this.lastclicked[i].position );
+			ObjectMaker.removeTile( this.lastclicked[i].position, this.lastclicked[i].tilekind );
 		}
 		this.lastclicked = [];
 	}
