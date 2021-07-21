@@ -3,3 +3,7 @@ node_modules
 
 # ignore the build folder in public/
 public/build
+
+# ignore .md5 since the server secret is an .md5
+# (might make path explicit it other .md5 are added)
+*.md5
