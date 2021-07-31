@@ -124,19 +124,7 @@ exports.makeTile = (x,z, start) => { // TODO use startcooords (third arg) to cre
 
 exports.removeTile = (pos,kind) => {
 	const tile = planeCoordToIndex(pos);
-	switch (kind) {
-	case 'floor':
-		tiles.floor.del(tile.x, tile.y, tile.z);
-		break;
-	case 'xwall':
-		tiles.xwall.del(tile.x, tile.y, tile.z);
-		break;
-	case 'zwall':
-		tiles.zwall.del(tile.x, tile.y, tile.z);
-		break;
-	default:
-		console.warn('bad tile kind');
-	}
+	tiles[kind].del(tile.x, tile.y, tile.z);
 };
 
 exports.findTiles = (start,end,kind) => {
