@@ -13,9 +13,11 @@ const box_geometry = new THREE.BoxGeometry();
 const plane_geometry = new THREE.PlaneGeometry( tile_size, tile_size );
 const wire_geometry = new THREE.WireframeGeometry( box_geometry );
 
-const floor = new Matrix3D();
-const walls_x = new Matrix3D();
-const walls_z = new Matrix3D();
+const tiles = {
+	floor: new Matrix3D(),
+	xwall: new Matrix3D(),
+	zwall: new Matrix3D()
+}
 
 exports.setColor = (objects,col) => {
 	for (let i=0; i < objects.length; i++)
@@ -100,7 +102,7 @@ exports.makeTile = (x,z, start) => { // TODO use startcooords (third arg) to cre
 
 	for (let i = Math.min(start_x,tile_x); i <= Math.max(start_x,tile_x); i++)
 		for (let j = Math.min(start_z,tile_z); j <= Math.max(start_z,tile_z); j++) {
-			if (floor.has(i,tile_y,j))
+			if (tiles.floor.has(i,tile_y,j))
 				continue;
 
 			const real_x = (i+0.5) * block;
@@ -113,7 +115,7 @@ exports.makeTile = (x,z, start) => { // TODO use startcooords (third arg) to cre
 				console.log('floor');
 			};
 
-			floor.add(i,tile_y,j,tile);
+			tiles.floor.add(i,tile_y,j,tile);
 			arr.push(tile);
 		}
 
@@ -124,13 +126,13 @@ exports.removeTile = (pos,kind) => {
 	const tile = planeCoordToIndex(pos);
 	switch (kind) {
 	case 'floor':
-		floor.del(tile.x, tile.y, tile.z);
+		tiles.floor.del(tile.x, tile.y, tile.z);
 		break;
 	case 'xwall':
-		walls_x.del(tile.x, tile.y, tile.z);
+		tiles.xwall.del(tile.x, tile.y, tile.z);
 		break;
 	case 'zwall':
-		walls_z.del(tile.x, tile.y, tile.z);
+		tiles.zwall.del(tile.x, tile.y, tile.z);
 		break;
 	default:
 		console.warn('bad tile kind');
@@ -153,7 +155,7 @@ exports.findTiles = (start,end,kind) => {
 		if (start.y != end.y)
 			return [];
 		level = Math.floor(start.y/block);
-		addTile = (x,y) => floor.get(x,level,y);
+		addTile = (x,y) => tiles.floor.get(x,level,y);
 		break;
 	case 'xwall':
 		start_x = Math.floor(start.z/block);
@@ -163,7 +165,7 @@ exports.findTiles = (start,end,kind) => {
 		if (start.x != end.x)
 			return [];
 		level = Math.floor(start.x/block);
-		addTile = (x,y) => walls_x.get(level,y,x);
+		addTile = (x,y) => tiles.xwall.get(level,y,x);
 		break;
 	case 'zwall':
 		start_x = Math.floor(start.x/block);
@@ -173,7 +175,7 @@ exports.findTiles = (start,end,kind) => {
 		if (start.z != end.z)
 			return [];
 		level = Math.floor(start.z/block);
-		addTile = (x,y) => walls_z.get(x,y,level);
+		addTile = (x,y) => tiles.zwall.get(x,y,level);
 		break;
 	default:
 		console.warn('bad tile kind');
@@ -219,14 +221,14 @@ exports.makeXWall = (start, end, scene) => {
 		const norm_x = Math.floor(xlevel/block);
 		const norm_y = Math.floor(y/block);
 		const norm_z = Math.floor(x/block);
-		if (!walls_x.has( norm_x, norm_y, norm_z )) {
+		if (!tiles.xwall.has( norm_x, norm_y, norm_z )) {
 			const wall = makeTile('xwall');
 			wall.lookAt(1, 0, 0);
 			wall.onClick = () => {
 				console.log('X wall');
 			};
 			wall.position.set( xlevel, y, x );
-			walls_x.add(
+			tiles.xwall.add(
 				norm_x,
 				norm_y,
 				norm_z,
@@ -244,14 +246,14 @@ exports.makeZWall = (start, end, scene) => {
 		const norm_x = Math.floor(x/block);
 		const norm_y = Math.floor(y/block);
 		const norm_z = Math.floor(zlevel/block);
-		if (!walls_z.has( norm_x, norm_y, norm_z )) {
+		if (!tiles.zwall.has( norm_x, norm_y, norm_z )) {
 			const wall = makeTile('zwall');
 			wall.onClick = () => {
 				console.log('Z wall');
 			};
 			wall.position.set( x, y, zlevel );
 			console.log(x,y,zlevel);
-			walls_z.add(
+			tiles.zwall.add(
 				norm_x,
 				norm_y,
 				norm_z,
