@@ -212,24 +212,26 @@ function transformCoords(x,y,kind) {
 		console.log('unimplented');
 		return;
 	}
-};
+}
 
-exports.makeXWall = (start, end, scene) => {
-	const start_coords = getVerticalWallCoords(start.z,start.y);
-	const end_coords = getVerticalWallCoords(end.z,end.y);
-	makeWall(start_coords,end_coords, (x,y) => {
-		const xyz = transformCoords(x,y,'xwall');
+function getMakeWallFunc(kind,scene) {
+	return (x,y) => {
+		const xyz = transformCoords(x,y,kind);
 		const norm_x = Math.floor(xyz.x/block);
 		const norm_y = Math.floor(xyz.y/block);
 		const norm_z = Math.floor(xyz.z/block);
-		if (!tiles.xwall.has( norm_x, norm_y, norm_z )) {
-			const wall = makeTile('xwall');
-			wall.lookAt(1, 0, 0);
+		if (!tiles[kind].has( norm_x, norm_y, norm_z )) {
+			const wall = makeTile(kind);
+			wall.lookAt(
+				kind === 'xwall',
+				kind === 'floor',
+				kind === 'zwall'
+			);
 			wall.onClick = () => {
-				console.log('X wall');
+				console.log(kind);
 			};
 			wall.position.set( xyz.x, xyz.y, xyz.z );
-			tiles.xwall.add(
+			tiles[kind].add(
 				norm_x,
 				norm_y,
 				norm_z,
@@ -237,32 +239,19 @@ exports.makeXWall = (start, end, scene) => {
 			);
 			scene.add(wall);
 		}
-	});
+	};
+}
+
+exports.makeXWall = (start, end, scene) => {
+	const start_coords = getVerticalWallCoords(start.z,start.y);
+	const end_coords = getVerticalWallCoords(end.z,end.y);
+	makeWall(start_coords,end_coords,getMakeWallFunc('xwall',scene));
 };
 
 exports.makeZWall = (start, end, scene) => {
 	const start_coords = getVerticalWallCoords(start.x,start.y);
 	const end_coords = getVerticalWallCoords(end.x,end.y);
-	makeWall(start_coords,end_coords, (x,y) => {
-		const xyz = transformCoords(x,y,'zwall');
-		const norm_x = Math.floor(xyz.x/block);
-		const norm_y = Math.floor(xyz.y/block);
-		const norm_z = Math.floor(xyz.z/block);
-		if (!tiles.zwall.has( norm_x, norm_y, norm_z )) {
-			const wall = makeTile('zwall');
-			wall.onClick = () => {
-				console.log('Z wall');
-			};
-			wall.position.set( xyz.x, xyz.y, xyz.z );
-			tiles.zwall.add(
-				norm_x,
-				norm_y,
-				norm_z,
-				wall
-			);
-			scene.add(wall);
-		}
-	});
+	makeWall(start_coords,end_coords,getMakeWallFunc('zwall',scene));
 };
 
 exports.makeRotatingCube = () => {
