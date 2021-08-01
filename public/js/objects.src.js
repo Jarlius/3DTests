@@ -202,20 +202,33 @@ function makeWall(start,end,func) {
 	}
 }
 
+function transformCoords(x,y,kind) {
+	switch (kind) {
+	case 'xwall':
+		return { x:xlevel, y:y, z:x };
+	case 'zwall':
+		return { x:x, y:y, z:zlevel };
+	default:
+		console.log('unimplented');
+		return;
+	}
+};
+
 exports.makeXWall = (start, end, scene) => {
 	const start_coords = getVerticalWallCoords(start.z,start.y);
 	const end_coords = getVerticalWallCoords(end.z,end.y);
 	makeWall(start_coords,end_coords, (x,y) => {
-		const norm_x = Math.floor(xlevel/block);
-		const norm_y = Math.floor(y/block);
-		const norm_z = Math.floor(x/block);
+		const xyz = transformCoords(x,y,'xwall');
+		const norm_x = Math.floor(xyz.x/block);
+		const norm_y = Math.floor(xyz.y/block);
+		const norm_z = Math.floor(xyz.z/block);
 		if (!tiles.xwall.has( norm_x, norm_y, norm_z )) {
 			const wall = makeTile('xwall');
 			wall.lookAt(1, 0, 0);
 			wall.onClick = () => {
 				console.log('X wall');
 			};
-			wall.position.set( xlevel, y, x );
+			wall.position.set( xyz.x, xyz.y, xyz.z );
 			tiles.xwall.add(
 				norm_x,
 				norm_y,
@@ -225,22 +238,22 @@ exports.makeXWall = (start, end, scene) => {
 			scene.add(wall);
 		}
 	});
-}
+};
 
 exports.makeZWall = (start, end, scene) => {
 	const start_coords = getVerticalWallCoords(start.x,start.y);
 	const end_coords = getVerticalWallCoords(end.x,end.y);
 	makeWall(start_coords,end_coords, (x,y) => {
-		const norm_x = Math.floor(x/block);
-		const norm_y = Math.floor(y/block);
-		const norm_z = Math.floor(zlevel/block);
+		const xyz = transformCoords(x,y,'zwall');
+		const norm_x = Math.floor(xyz.x/block);
+		const norm_y = Math.floor(xyz.y/block);
+		const norm_z = Math.floor(xyz.z/block);
 		if (!tiles.zwall.has( norm_x, norm_y, norm_z )) {
 			const wall = makeTile('zwall');
 			wall.onClick = () => {
 				console.log('Z wall');
 			};
-			wall.position.set( x, y, zlevel );
-			console.log(x,y,zlevel);
+			wall.position.set( xyz.x, xyz.y, xyz.z );
 			tiles.zwall.add(
 				norm_x,
 				norm_y,
